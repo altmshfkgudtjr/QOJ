@@ -1,0 +1,29 @@
+{
+  "name": "qoj",
+  "version": "1.0.0",
+  "description": "Query Online Judge System",
+  "main": "app.js",
+  "scripts": {
+    "build": "webpack",
+    "devserver": "webpack-dev-server --open --progress"
+  },
+  "author": "NB",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-syntax-object-rest-spread": "^7.8.3",
+    "@babel/preset-env": "^7.9.5",
+    "@kodnificent/sparouter": "^1.1.0",
+    "babel-loader": "^8.1.0",
+    "babel-polyfill": "^6.26.0",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3",
+    "whatwg-fetch": "^3.0.0"
+  },
+  "dependencies": {
+    "install": "^0.13.0",
+    "npm": "^6.14.4",
+    "wowjs": "^1.1.3"
+  }
+}
