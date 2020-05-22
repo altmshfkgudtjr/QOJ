@@ -1,6 +1,10 @@
 // import SPARouter from "@kodnificent/sparouter";
-import SPARouter from "../node_modules/@kodnificent/sparouter/dist/sparouter.js";
-import { App } from './app.js';
+import SPARouter from "../node_modules/@kodnificent/sparouter/dist/sparouter.js"
+import { App } from './app.js'
+import { MainContainer } from './containers/main.js'
+import { BoardContainer } from './containers/board.js'
+import { LectureContainer } from './containers/lecture.js'
+import { NotfoundContainer } from './containers/notfound.js'
 
 const app_ = new App();
 
@@ -13,13 +17,30 @@ const router = new SPARouter(options);
 // Home
 router.get("/", function(req, router){ 
 	app_.reset();
-	document.title = "QOJ";
-	// HomeContainer();
+	document.title = "Query-Oline Judge";
+	MainContainer();
 }).setName("Home");
+
+// Board
+router.get("/board", function(req, router){ 
+	app_.reset();
+	document.title = "분반선택 | Query-Oline Judge";
+	BoardContainer();
+}).setName("Board");
+
+// Lecture
+router.get("/lecture", function(req, router){ 
+	app_.reset();
+	document.title = "주차선택 | Query-Oline Judge";
+	LectureContainer();
+}).setName("Lecture");
 
 // 404 Not found!
 router.notFoundHandler(function(){
-	console.log("404 ^_^");
+	fetch(window.location.pathname, {
+		method: 'GET'
+	});
+	NotfoundContainer();
 });
 
 router.init();

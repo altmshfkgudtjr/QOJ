@@ -39,7 +39,7 @@ module.exports = {
              rewrites: [
                 { from: /^\/$/, to: '/index.html' }
             ]
-        }
+        },
     },
     devtool: 'inline-source-map',
     mode: 'development'
