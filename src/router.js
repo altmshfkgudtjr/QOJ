@@ -29,7 +29,7 @@ router.get("/board", function(req, router){
 }).setName("Board");
 
 // Lecture
-router.get("/lecture", function(req, router){ 
+router.get("/lecture", function(req, router){
 	app_.reset();
 	document.title = "주차선택 | Query-Oline Judge";
 	LectureContainer();

@@ -1,5 +1,6 @@
 import { ApiUserClasses } from '../../controller/user.js'
 import { ApiManagerClasses } from '../../controller/manager.js'
+import { router } from '../../router.js'
 
 const Class = ()=> {
 	let view = `
@@ -67,14 +68,13 @@ const ClassEvent = (userinfo)=> {
 	}
 }
 
-const ClassSelect = (class_id)=> {
-	// 수업 선택
-	console.log(class_id, "실행");
+const ClassSelect = (lecture_id)=> {
+	router._goTo(`lecture#cl?${lecture_id}`);
 }
 
-const ClassManage = (class_id)=> {
+const ClassManage = (lecture_id)=> {
 	// 수업 관리
-	console.log(class_id, "관리");
+	console.log(lecture_id, "관리");
 }
 
 
