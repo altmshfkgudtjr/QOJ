@@ -1,10 +1,13 @@
 import { FETCH } from '../fetch.js'
 import { Snackbar } from '../components/snackbar.js'
+import { LoadingOn, LoadingOff } from '../components/loading.js'
 
 // 문제집 목록 반환
-const ApiLectureList = (lecture_name, callback)=> {
-	let sendData = {'id': lecture_name};
-	FETCH('/API/V1/lecture/lecture_list', 'POST', sendData, (data)=> {
+const ApiLectureList = (lecture_id, callback)=> {
+	let sendData = {'class_id': lecture_id};
+	LoadingOn();
+	FETCH('/API/V1/problem_manage/get_problem_group1', 'POST', sendData, (data)=> {
+		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
 				callback(data.RESULT);
@@ -18,13 +21,37 @@ const ApiLectureList = (lecture_name, callback)=> {
 			console.log('failed');
 			Snackbar("Request failed");
 		}
-	});	
+	});
+}
+
+// 문제집 정보 반환
+const ApiProblemsInfo = (class_id, callback)=> {
+	let sendData = {'pg_id': class_id};
+	LoadingOn();
+	FETCH('/API/V1/problem_manage/get_problem_group2', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
 }
 
 // 문제집 문제 반환
-const ApiLectureProblems = (class_name, callback)=> {
-	let sendData = {'id': class_name};
-	FETCH('/API/V1/lecture/problems', 'POST', sendData, (data)=> {
+const ApiLectureProblems = (class_id, callback)=> {
+	let sendData = {'pg_id': class_id};
+	LoadingOn();
+	FETCH('/API/V1/problem_manage/get_problem_list', 'POST', sendData, (data)=> {
+		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
 				callback(data.RESULT);
@@ -43,8 +70,10 @@ const ApiLectureProblems = (class_name, callback)=> {
 
 // 문제 반환
 const ApiProblem = (problem_id, callback)=> {
-	let sendData = {'id': problem_id};
-	FETCH('/API/V1/lecture/problem', 'POST', sendData, (data)=> {
+	let sendData = {'p_id': problem_id};
+	LoadingOn();
+	FETCH('/API/V1/problem_manage/get_problem', 'POST', sendData, (data)=> {
+		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
 				callback(data.RESULT);
@@ -58,7 +87,51 @@ const ApiProblem = (problem_id, callback)=> {
 			console.log('failed');
 			Snackbar("Request failed");
 		}
-	});	
+	});
 }
 
-export { ApiLectureList, ApiLectureProblems, ApiProblem }
+// 문제 제출
+const ApiRunProblem = (problem_id, query, callback)=> {
+	let sendData = {'id': problem_id, 'query': query};
+	LoadingOn();
+	FETCH('/API/V1/problem/run', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
+// 문제 제출
+const ApiSubmitProblem = (problem_id, query, callback)=> {
+	let sendData = {'id': problem_id, 'query': query};
+	LoadingOn();
+	FETCH('/API/V1/problem/submit', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
+export { ApiLectureList, ApiProblemsInfo, ApiLectureProblems, ApiProblem, ApiRunProblem, ApiSubmitProblem }

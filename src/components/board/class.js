@@ -14,6 +14,7 @@ const Class = ()=> {
 const ClassEvent = (userinfo)=> {	
 	// 사용자 분반 불러오기
 	ApiUserClasses((data)=> {
+		if (data.length == 0) return;
 		document.querySelector("#user").innerHTML = `
 			<div class="class_container_title noselect">분반 선택하기</div>
 			<div id="user_classes" class="class_content_container"></div>
@@ -39,33 +40,32 @@ const ClassEvent = (userinfo)=> {
 		}
 	});
 	// 관리 분반 불러오기
-	if (userinfo['user_type'] < 4) {
-		ApiManagerClasses((data)=> {
-			document.querySelector("#manager").innerHTML = `
-				<div class="class_container_title noselect">분반 관리하기</div>
-				<div id="manager_classes" class="class_content_container"></div>
-			`;
-			let target = document.querySelector('#manager_classes');
-			for (let cls of data) {
-				let content = document.createElement('div');
-				content.classList.add(...['box', 'class_content', 'noselect', 'pointer']);
+	ApiManagerClasses((data)=> {
+		if (data.length == 0) return;
+		document.querySelector("#manager").innerHTML = `
+			<div class="class_container_title noselect">분반 관리하기</div>
+			<div id="manager_classes" class="class_content_container"></div>
+		`;
+		let target = document.querySelector('#manager_classes');
+		for (let cls of data) {
+			let content = document.createElement('div');
+			content.classList.add(...['box', 'class_content', 'noselect', 'pointer']);
 
-				let title = document.createElement('div');
-				title.classList.add('class_content_title');
-				title.textContent = cls['class_name'];
-				content.append(title);
+			let title = document.createElement('div');
+			title.classList.add('class_content_title');
+			title.textContent = cls['class_name'];
+			content.append(title);
 
-				let arrow = document.createElement('div');
-				arrow.classList.add('class_content_arrow');
-				arrow.innerHTML = 'move  <i class="fas fa-arrow-right"></i>';
-				content.append(arrow);
+			let arrow = document.createElement('div');
+			arrow.classList.add('class_content_arrow');
+			arrow.innerHTML = 'move  <i class="fas fa-arrow-right"></i>';
+			content.append(arrow);
 
-				content.addEventListener("click", ()=> { ClassManage(cls['class_id']) });
+			content.addEventListener("click", ()=> { ClassManage(cls['class_id']) });
 
-				target.append(content);
-			}
-		});
-	}
+			target.append(content);
+		}
+	});
 }
 
 const ClassSelect = (lecture_id)=> {

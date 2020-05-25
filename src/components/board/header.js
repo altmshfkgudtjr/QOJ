@@ -1,4 +1,5 @@
 import { router } from '../../router.js'
+import { Snackbar } from '../snackbar.js'
 
 const Header = ()=> {
 	let view = `
@@ -29,8 +30,8 @@ const HeaderEvent = (userinfo)=> {
 	});
 	document.querySelector('#logout').addEventListener("click", ()=> {
 		sessionStorage.removeItem('tk');
-		alert('Logout successful.');
 		router._goTo(router._pathFor("Home"));
+		Snackbar('Logout successful.');
 	});
 }
 

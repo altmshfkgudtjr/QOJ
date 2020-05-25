@@ -5,7 +5,7 @@ import { SelectLayout } from './layout.js'
 const Menu = ()=> {
 	let view = `
 		<div class="menu">
-			<div id="menu_title" class="menu_title noselect" data-name="QOJ 연습문제">QOJ 연습문제</div>
+			<div id="menu_title" class="menu_title noselect" data-name="">Loading..</div>
 			<div id="menu"></div>
 		</div>
 	`;
@@ -15,14 +15,15 @@ const Menu = ()=> {
 
 // 해당 분반 주차 목록 가져오기
 const MenuEvent = (lecture_id)=> {
-	let data = [{'name': 'SELECT 연습문제', 'pg_id': 1}]; // 임시데이터
-	// ApiLectureList(lecture_id, (data)=> {
+	ApiLectureList(lecture_id, (data)=> {
+		document.querySelector("#menu_title").dataset.name = data[0]['class_name'];
+		document.querySelector("#menu_title").textContent = data[0]['class_name'];
 		let target = document.querySelector("#menu");
 		target.innerHTML = "";	// 메뉴 초기화
 		for (let row of data) {
 			let lecture = document.createElement('div');
 			lecture.classList.add(...['menu_item', 'noselect','pointer']);
-			lecture.textContent = row['name'];
+			lecture.textContent = row['pg_name'];
 			lecture.addEventListener("click", ()=> {
 				if (location.href.split('lecture')[1] != undefined &&
 					!location.href.split('lecture')[1].startsWith(`#cl?${lecture_id}#cn?${row['pg_id']}`)) {
@@ -34,10 +35,10 @@ const MenuEvent = (lecture_id)=> {
 			target.append(lecture);
 		}
 		ContentUrlCehck();
-	// });
+	});
 }
 
-const MenuUrlCehck = ()=> {
+const MenuUrlCheck = ()=> {
 	if (location.href.split("#cl?")[1] == undefined) {
 		router._goTo("board");
 		return;
@@ -48,4 +49,4 @@ const MenuUrlCehck = ()=> {
 	}
 }
 
-export { Menu, MenuUrlCehck }
+export { Menu, MenuUrlCheck }

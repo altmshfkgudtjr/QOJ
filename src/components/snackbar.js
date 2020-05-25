@@ -2,20 +2,22 @@
 	알림바
 */
 
-const Snackbar = (text)=> {
+const Snackbar = (text, color='black')=> {
 	if (document.querySelector(".snackbar") != null) {
 		SnackbarOff(document.querySelector(".snackbar"));
-		SnackbarOn(text);
+		SnackbarOn(text, color);
 	} else {
-		SnackbarOn(text);
+		SnackbarOn(text, color);
 	}
 }
 
 // 알림바 켜기
-const SnackbarOn = (text)=> {
+const SnackbarOn = (text, color)=> {
 	let target = document.querySelector('#app');
 	let snackbar = document.createElement('div');
 	snackbar.classList.add(...['snackbar', 'noselect', 'pointer', 'wow', 'animated', 'fadeInUp']);
+	if (color == 'red') snackbar.classList.add('snackbar_red');
+	else if (color == 'green') snackbar.classList.add('snackbar_green');
 	snackbar.textContent = text;
 	snackbar.addEventListener("click", ()=> { SnackbarOff(snackbar) });
 	target.append(snackbar);

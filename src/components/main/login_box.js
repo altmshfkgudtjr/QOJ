@@ -54,7 +54,8 @@ const LoginAction = ()=> {
 	}
 	ApiUserLogin(id, pw, (data)=> {
 		sessionStorage.setItem('tk', data);
-		router._goTo(router._pathFor("Board"));
+		router._goTo("/board");
+		Snackbar("Login successful!");
 	});
 }
 

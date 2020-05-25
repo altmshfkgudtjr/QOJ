@@ -2,6 +2,9 @@ import { Header, HeaderEvent } from '../components/board/header.js'
 import { Class, ClassEvent } from '../components/board/class.js'
 import { Background } from '../components/background.js'
 import { ApiUserInfo } from '../controller/user.js'
+import { router } from '../router.js'
+import { Snackbar } from '../components/snackbar.js'
+
 
 const BoardContainer = ()=> {
 	let view = `
@@ -27,6 +30,9 @@ const AutoLogin = ()=> {
 		ApiUserInfo((data)=> {
 			BoardContainerEventBinding(data);
 		});
+	} else {
+		router._goTo("/");
+		Snackbar("Login to unlock QOJ");
 	}
 }
 

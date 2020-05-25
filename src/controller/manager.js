@@ -1,9 +1,12 @@
 import { FETCH } from '../fetch.js'
 import { Snackbar } from '../components/snackbar.js'
+import { LoadingOn, LoadingOff } from '../components/loading.js'
 
 // 관리자 분반 반환
 const ApiManagerClasses = (callback)=> {
-	FETCH('/API/V1/auth/get_userclass', 'GET', null, (data)=> {
+	LoadingOn();
+	FETCH('/API/V1/class_manage/get_admin_class', 'GET', null, (data)=> {
+		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
 				callback(data.RESULT);

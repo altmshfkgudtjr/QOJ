@@ -83,9 +83,9 @@ const SignupAction = ()=> {
 			Snackbar("This user already exists.");
 			return;
 		}
-		alert('Welcome to QOJ');
 		sessionStorage.setItem('tk', data);
-		router._goTo(router._pathFor("Board"));
+		router._goTo("/board");
+		Snackbar(`Hello! ${id}`);
 	});
 }
 export { SignupBox, SignupBoxEvent, SignupBoxRemove }
