@@ -2,7 +2,7 @@ import { FETCH } from '../fetch.js'
 import { Snackbar } from '../components/snackbar.js'
 import { LoadingOn, LoadingOff } from '../components/loading.js'
 
-// 관리자 분반 반환
+// 관리자 분반 반환 API
 const ApiManagerClasses = (callback)=> {
 	LoadingOn();
 	FETCH('/API/V1/class_manage/get_admin_class', 'GET', null, (data)=> {

@@ -53,7 +53,50 @@ const ApiUserSignUp = (id, pw, name, email, callback)=> {
 	});	
 }
 
-// 사용자 정보 반환
+// 회원정보수정 API
+const ApiUserUpdate = (pw, re_pw, email, callback)=> {
+	let sendData = {'pw': pw, 're_pw': re_pw, 'email': email};
+	LoadingOn();
+	FETCH('/API/V1/auth/update', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});	
+}
+
+// 회원탈퇴 API
+const ApiUserDelete = (callback)=> {
+	LoadingOn();
+	FETCH('/API/V1/auth/update', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});	
+}
+
+// 사용자 정보 반환 API
 const ApiUserInfo = (callback)=> {
 	LoadingOn();
 	FETCH('/API/V1/auth/get_userinfo', 'GET', null, (data)=> {
@@ -74,7 +117,7 @@ const ApiUserInfo = (callback)=> {
 	});	
 }
 
-// 사용자 분반 반환
+// 사용자 분반 반환 API
 const ApiUserClasses = (callback)=> {
 	LoadingOn();
 	FETCH('/API/V1/class_manage/get_class', 'GET', null, (data)=> {
@@ -95,4 +138,25 @@ const ApiUserClasses = (callback)=> {
 	});	
 }
 
-export { ApiUserLogin, ApiUserSignUp, ApiUserInfo, ApiUserClasses }
+// 사용자 푼 문제 반환 API
+const ApiUserProblems = (callback)=> {
+	LoadingOn();
+	FETCH('/API/V1/auth/get_problem_list', 'GET', null, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});	
+}
+
+export { ApiUserLogin, ApiUserSignUp, ApiUserUpdate, ApiUserDelete, ApiUserInfo, ApiUserClasses, ApiUserProblems }

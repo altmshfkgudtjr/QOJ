@@ -2,7 +2,7 @@ import { FETCH } from '../fetch.js'
 import { Snackbar } from '../components/snackbar.js'
 import { LoadingOn, LoadingOff } from '../components/loading.js'
 
-// 문제집 목록 반환
+// 문제집 목록 반환 API
 const ApiLectureList = (lecture_id, callback)=> {
 	let sendData = {'class_id': lecture_id};
 	LoadingOn();
@@ -24,7 +24,7 @@ const ApiLectureList = (lecture_id, callback)=> {
 	});
 }
 
-// 문제집 정보 반환
+// 문제집 정보 반환 API
 const ApiProblemsInfo = (class_id, callback)=> {
 	let sendData = {'pg_id': class_id};
 	LoadingOn();
@@ -46,7 +46,7 @@ const ApiProblemsInfo = (class_id, callback)=> {
 	});
 }
 
-// 문제집 문제 반환
+// 문제집 문제 반환 API
 const ApiLectureProblems = (class_id, callback)=> {
 	let sendData = {'pg_id': class_id};
 	LoadingOn();
@@ -68,7 +68,7 @@ const ApiLectureProblems = (class_id, callback)=> {
 	});	
 }
 
-// 문제 반환
+// 문제 반환 API
 const ApiProblem = (problem_id, callback)=> {
 	let sendData = {'p_id': problem_id};
 	LoadingOn();
@@ -90,7 +90,7 @@ const ApiProblem = (problem_id, callback)=> {
 	});
 }
 
-// 문제 제출
+// 문제 제출 API
 const ApiRunProblem = (problem_id, query, callback)=> {
 	let sendData = {'id': problem_id, 'query': query};
 	LoadingOn();
@@ -112,7 +112,7 @@ const ApiRunProblem = (problem_id, query, callback)=> {
 	});
 }
 
-// 문제 제출
+// 문제 제출 API
 const ApiSubmitProblem = (problem_id, query, callback)=> {
 	let sendData = {'id': problem_id, 'query': query};
 	LoadingOn();

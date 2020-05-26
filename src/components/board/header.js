@@ -23,14 +23,14 @@ const HeaderEvent = (userinfo)=> {
 	document.querySelector("#user_info").querySelector("span").textContent = userinfo.user_id;
 
 	document.querySelector('#logo').addEventListener("click", ()=> {
-		router._goTo(router._pathFor("Home"));
+		router._goTo('/');
 	});
 	document.querySelector('#user_info').addEventListener("click", ()=> {
-		console.log("내정보");
+		router._goTo('/user')
 	});
 	document.querySelector('#logout').addEventListener("click", ()=> {
 		sessionStorage.removeItem('tk');
-		router._goTo(router._pathFor("Home"));
+		router._goTo('/');
 		Snackbar('Logout successful.');
 	});
 }

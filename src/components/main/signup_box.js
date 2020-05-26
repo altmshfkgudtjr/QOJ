@@ -9,7 +9,7 @@ const SignupBox = ()=> {
 		<div class="login_title">S I G N &nbsp&nbsp U P</div>
 		<input id="user_id" type="text" class="login_input" placeholder="ID/Student Number" autocompete="off">
 		<input id="user_pw" type="password" class="login_input" placeholder="Password">
-		<input id="user_pw_re" type="password" class="login_input" placeholder="Re-Password">
+		<input id="user_pw_re" type="password" class="login_input" placeholder="Confirm Password">
 		<input id="user_name" type="text" class="login_input" placeholder="Name" autocompete="off">
 		<input id="user_mail" type="email" class="login_input" placeholder="E-mail" autocompete="on">
 		<div id="signup_submit" class="login_submit pointer">Sign Up</div>

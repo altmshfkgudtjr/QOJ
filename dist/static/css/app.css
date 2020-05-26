@@ -114,7 +114,7 @@ a, div {
 	top: 0;
 	left: 0;
 	background-color: rgba(0,0,0,.5);
-	z-index: 1000;
+	z-index: 99;
 }
 .loading {
 	position: absolute;
@@ -726,4 +726,109 @@ a, div {
 }
 .shell_btn:nth-child(1) {
 	margin-right: 0;
+}
+
+
+
+
+
+/*				USER				*/
+.user_box {
+	position: relative;
+	width: 100%;
+	max-width: 1000px;
+	height: auto;
+	box-sizing: border-box;
+	padding: 20px 40px;
+	margin: auto;
+}
+.user_title {
+	position: relative;
+	font-size: 14px;
+	color: white;
+	overflow: hidden;
+	line-height: 20px;
+}
+.user_input {
+	outline: none;
+	position: relative;
+	display: block;
+	width: 80%;
+	max-width: 400px;
+	height: 40px;
+	padding: 0 20px;
+	box-sizing: border-box;
+	margin: 10px 0 20px 0;
+	background-color: #dcdcdc;
+	border: none;
+	border-radius: 5px;
+	font-size: 16px;
+	opacity: .9;
+	transition: .1s var(--qoj-transition);
+}
+.user_input:focus {
+	opacity: 1;
+}
+.user_update_btn {
+	position: relative;
+	width: 140px;
+	height: 50px;
+	margin-left: auto;
+	color: var(--qoj-skyblue);
+	transition: .2s var(--qoj-transition);
+	text-align: center;
+	line-height: 50px;
+}
+.user_update_btn:hover {
+	background-color: rgba(255,255,255,.1);
+}
+.user_problem_cont {
+	position: relative;
+	width: 80%;
+	max-width: 1000px;
+	height: auto;
+	margin-bottom: 200px;
+	display: flex;
+	flex-flow: row wrap;
+	flex-direction: row;
+}
+.user_delete_account {
+	color: var(--qoj-red);
+}
+.user_info_title {
+	margin-bottom: 0;
+}
+.user_info {
+	position: relative;
+	width: 80%;
+	max-width: 1000px;
+	height: auto;
+	font-size: 16px;
+	line-height: 30px;
+	color: rgba(255,255,255,.8);
+	margin: auto;
+}
+.user_button_box{
+	position: relative;
+	width: 80%;
+	max-width: 1000px;
+	height: auto;
+	margin: auto;
+}
+.user_delete_button {
+	position: relative;
+	width: 240px;
+	height: 50px;
+	box-sizing: border-box;
+	padding: 0 20px;
+	font-size: 16px;
+	line-height: 50px;
+	background-color: var(--qoj-background);
+	color: var(--qoj-red);
+	transition: .2s var(--qoj-transition);
+	margin: 10px 0 10px auto;
+	text-align: center;
+}
+.user_delete_button:hover {
+	background-color: rgba(255,255,255,.2);
 }

@@ -4,6 +4,7 @@ import { App } from './app.js'
 import { MainContainer } from './containers/main.js'
 import { BoardContainer } from './containers/board.js'
 import { LectureContainer } from './containers/lecture.js'
+import { UserContainer } from './containers/user.js'
 import { NotfoundContainer } from './containers/notfound.js'
 
 const app_ = new App();
@@ -34,6 +35,13 @@ router.get("/lecture", function(req, router){
 	document.title = "주차선택 | Query-Oline Judge";
 	LectureContainer();
 }).setName("Lecture");
+
+// User
+router.get("/user", function(req, router){
+	app_.reset();
+	document.title = "내 정보 | Query-Oline Judge";
+	UserContainer();
+}).setName("User");
 
 // 404 Not found!
 router.notFoundHandler(function(){
