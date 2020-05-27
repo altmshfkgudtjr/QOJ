@@ -57,8 +57,8 @@ const ClassEvent = (userinfo)=> {
 			content.append(title);
 
 			let arrow = document.createElement('div');
-			arrow.classList.add('class_content_arrow');
-			arrow.innerHTML = 'move  <i class="fas fa-arrow-right"></i>';
+			arrow.classList.add(...['class_content_arrow', 'arrow_yellow']);
+			arrow.innerHTML = 'manager  <i class="fas fa-arrow-right"></i>';
 			content.append(arrow);
 
 			content.addEventListener("click", ()=> { ClassManage(cls['class_id']) });
@@ -73,8 +73,7 @@ const ClassSelect = (lecture_id)=> {
 }
 
 const ClassManage = (lecture_id)=> {
-	// 수업 관리
-	console.log(lecture_id, "관리");
+	router._goTo(`/manager#cl?${lecture_id}`);
 }
 
 

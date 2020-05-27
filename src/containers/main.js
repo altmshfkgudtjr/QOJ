@@ -21,6 +21,7 @@ const MainContainer = ()=> {
 const MainContainerEventBinding = ()=> {
 	if (sessionStorage.getItem('tk') != undefined) {
 		router._goTo("/board");
+		return;
 	}
 	HeaderEvent();						// Header 이벤트 바인딩
 	LoginBoxEvent();					// MainBox 이벤트 바인딩

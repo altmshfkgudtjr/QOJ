@@ -4,9 +4,9 @@ import { SelectLayout } from './layout.js'
 
 const Content = ()=> {
 	let view = `
-		<div id="problems_title" class="content_container_title noselect">Welcom To QOJ! Select Contents.</div>
+		<div id="problems_title" class="content_container_title noselect">&nbsp;</div>
 		<div class="content_container_time_cont noselect">
-			Start Time : <span id="class_start">Now</span>
+			Start Time : <span id="class_start"></span>
 		</div>
 		<div id="class_container" class="content_container_class_cont noselect"></div>
 	`;
@@ -21,8 +21,13 @@ const ContentEvent = (class_id)=> {
 		let title = document.querySelector("#menu_title").dataset.name;
 		let class_name = data['pg_name'];
 		document.querySelector("#problems_title").textContent = title+' - '+class_name;
-		let date = new Date(data['pg_date']);
-		date = date.getFullYear()+'-'+(date.getMonth()*1+1)+'-'+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+		let date = null;
+		if (data['pg_exam_start'] != null) {
+			date = new Date(data['pg_exam_start']);
+			date = date.getFullYear()+'-'+(date.getMonth()*1+1)+'-'+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+		} else {
+			date = "Infinite";
+		}
 		document.querySelector("#class_start").textContent = date;
 	});
 	ApiLectureProblems(class_id, (data)=> {

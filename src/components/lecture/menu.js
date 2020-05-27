@@ -5,7 +5,7 @@ import { SelectLayout } from './layout.js'
 const Menu = ()=> {
 	let view = `
 		<div class="menu">
-			<div id="menu_title" class="menu_title noselect" data-name="">Loading..</div>
+			<div id="menu_title" class="menu_title noselect" data-name=""></div>
 			<div id="menu"></div>
 		</div>
 	`;
@@ -25,17 +25,27 @@ const MenuEvent = (lecture_id)=> {
 			lecture.classList.add(...['menu_item', 'noselect','pointer']);
 			lecture.textContent = row['pg_name'];
 			lecture.addEventListener("click", ()=> {
-				if (location.href.split('lecture')[1] != undefined &&
-					!location.href.split('lecture')[1].startsWith(`#cl?${lecture_id}#cn?${row['pg_id']}`)) {
-					history.pushState(null,null,`lecture#cl?${lecture_id}#cn?${row['pg_id']}`);
-				} 
-				SelectLayout(0);
-				ContentEvent(row['pg_id']);
+				MenuItemClick(lecture_id, row['pg_id']);
 			});
 			target.append(lecture);
 		}
 		ContentUrlCehck();
 	});
+}
+
+// 메뉴를 클릭했을 때, (분반선택)
+const MenuItemClick = (lecture_id, class_id)=> {
+	if (document.querySelector("#shell") != null) {	// 문제에서 벗어나려는 경우
+		if (!confirm("Your query has not been saved. Submit it before going back to the page!")) {
+			return;
+		}
+	}
+	if (location.href.split('lecture')[1] != undefined &&
+		!location.href.split('lecture')[1].startsWith(`#cl?${lecture_id}#cn?${class_id}`)) {
+		history.pushState(null,null,`lecture#cl?${lecture_id}#cn?${class_id}`);
+	} 
+	SelectLayout(0);
+	ContentEvent(class_id);
 }
 
 const MenuUrlCheck = ()=> {

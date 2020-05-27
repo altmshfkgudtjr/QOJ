@@ -51,7 +51,7 @@ const ProblemEvent = (problem_id)=> {
 			document.querySelector("#shell").innerHTML = data['up_query'];
 		// 코드 실행 버튼
 		document.querySelector("#query_run").addEventListener("click", ()=> {
-			RunQuery(data['p_id']);
+			RunQuery();
 		});
 		// 코드 제출 버튼
 		document.querySelector("#query_submit").addEventListener("click", ()=> {
@@ -62,15 +62,10 @@ const ProblemEvent = (problem_id)=> {
 
 
 // 코드실행
-const RunQuery = (problem_id)=> {
-	let query = document.querySelector("#shell").textContent.trim();
-	console.log(query);
-	ApiRunProblem(problem_id, query, (data)=> {
-		if (data['result'] == 'right') {
-			Snackbar("Right Answer!", "green");
-		} else if (data['result'] == 'wrong') {
-			Snackbar("Wrong Answer", "red");
-		}
+const RunQuery = ()=> {
+	let query = document.querySelector("#shell").textContent.trim().replace(/\s{2,}/gi, ' ');
+	ApiRunProblem(query, (data)=> {
+		console.log(data);
 	});
 }
 
@@ -111,17 +106,20 @@ const drag = (e) => {
 const ChangeCodeLine = ()=> {
 	let num = [...document.querySelector("#shell").querySelectorAll('div')].length;	// 실제 줄 수
 	let last_num = [...document.querySelectorAll(".shell_num")];
-	last_num = last_num.splice(last_num.length-1, 1)[0].textContent;				// 표시된 줄 수
+	last_num = last_num.splice(last_num.length-1, 1)[0].textContent*1;				// 표시된 줄 수
 	if (num+1 > last_num) {
-		let line = document.createElement('div');
-		line.classList.add('shell_num');
-		if (document.querySelector("#shell").childNodes[0].nodeType == 3)	// text가 1번째 줄
-			line.textContent = num+1;
-		else
-			line.textContent = num;
-		if ([...document.querySelectorAll('.shell_num')].reverse()[0].textContent != line.textContent) {
-			document.querySelector("#shell_num").append(line);
-		}
+		do {
+			let line = document.createElement('div');
+			line.classList.add('shell_num');
+			if (document.querySelector("#shell").childNodes[0].nodeType == 3)	// text가 1번째 줄
+				line.textContent = last_num+1;
+			else
+				line.textContent = last_num;
+			if ([...document.querySelectorAll('.shell_num')].reverse()[0].textContent != line.textContent) {
+				document.querySelector("#shell_num").append(line);
+			}
+			last_num+=1;
+		} while (num+1 > last_num)
 	} else if (num+1 < last_num) {
 		for (let node of [...document.querySelectorAll('.shell_num')].reverse()) {
 			if (node.textContent == num+1) break;
@@ -131,4 +129,4 @@ const ChangeCodeLine = ()=> {
 	}
 }
 
-export { Problem, ProblemEvent }
+export { Problem, ProblemEvent, ChangeCodeLine }

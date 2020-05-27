@@ -90,9 +90,9 @@ const ApiProblem = (problem_id, callback)=> {
 	});
 }
 
-// 문제 제출 API
-const ApiRunProblem = (problem_id, query, callback)=> {
-	let sendData = {'id': problem_id, 'query': query};
+// 문제 실행 API
+const ApiRunProblem = (query, callback)=> {
+	let sendData = {'query': query};
 	LoadingOn();
 	FETCH('/API/V1/problem/run', 'POST', sendData, (data)=> {
 		LoadingOff();

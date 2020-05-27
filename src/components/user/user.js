@@ -6,8 +6,8 @@ import { SelectLayout } from '../lecture/layout.js'
 
 const User = ()=> {
 	let view = `
-	<div class="class_container_title noselect">User Information</div>
-	<div class="user_box box noselect">
+	<div class="class_container_title noselect wow animated fadeInDown">User Information</div>
+	<div class="user_box box noselect wow animated fadeIn" data-wow-duration="2s">
 		<div class="user_title">ID / Student Number</div>
 		<input id="id" class="user_input" disabled style="cursor: not-allowed;" placeholder="ID / Student Number">
 		<div class="user_title">Name</div>
@@ -22,11 +22,11 @@ const User = ()=> {
 		<input id="re_pw" class="user_input" type="password" placeholder="Confirm Password">
 		<div id="update" class="user_update_btn noselect pointer">Update&nbsp; <i class="fas fa-wrench"></i></div>
 	</div>
-	<div class="class_container_title user_delete_account user_info_title noselect">Delete account</div>
-	<div class="user_info noselect">Once you delete your account, there is no going back. Please be certain.</div>
-	<div class="user_button_box"><div id="delete_btn" class="user_delete_button noselect pointer">Are you sure?</div></div>
-	<div class="class_container_title user_info_title noselect">Status</div>
-	<div class="user_info noselect">The feed shows the problems you solved.</div>
+	<div class="class_container_title user_delete_account user_info_title noselect wow animated fadeInDown">Delete account</div>
+	<div class="user_info wow animated fadeIn" data-wow-duration="2s">Once you delete your account, there is no going back. Please be certain.</div>
+	<div class="user_button_box wow animated fadeInDown""><div id="delete_btn" class="user_delete_button noselect pointer">Are you sure?</div></div>
+	<div class="class_container_title user_info_title noselect wow animated fadeInDown">Status</div>
+	<div class="user_info wow animated fadeIn" data-wow-duration="2s">The feed shows the problems you solved.</div>
 	<div id="problems" class="user_problem_cont"></div>
 	`;
 
