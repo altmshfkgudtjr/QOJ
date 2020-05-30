@@ -299,7 +299,6 @@ const ViewDatabase = ()=> {
 	} else {
 		lecture_id = location.href.split("#cl?")[1].split("#")[0];
 	}
-	//let data = [{'mt_id': 1, 'mt_table_name': 'practice'}];
 	ApiGetDatabase(lecture_id, (data)=> {
 		let target = document.querySelector("#database_menu");
 		for (let db of data) {

@@ -44,9 +44,6 @@ const ClassEvent = (userinfo)=> {
 	// 관리 분반 불러오기
 	ApiManagerClasses((data)=> {
 		if (data.length == 0) return;
-		// 분반 생성
-		CreateLectureBtn(document.querySelector("#maker"));
-
 		document.querySelector("#manager").innerHTML = `
 			<div class="class_container_title noselect">분반 관리하기</div>
 			<div id="manager_classes" class="class_content_container"></div>
@@ -71,6 +68,8 @@ const ClassEvent = (userinfo)=> {
 			target.append(content);
 		}
 	});
+	// 분반 생성
+	CreateLectureBtn(document.querySelector("#maker"));
 }
 
 const ClassSelect = (lecture_id)=> {

@@ -67,7 +67,7 @@ const ApiActivateExam = (class_id, activation)=> {
 	});
 }
 
-// 분반 추가 API
+// 문제집 추가 API
 const ApiInsertClass = (lecture_id, title, start_time, end_time, callback)=> {
 	let sendData = {'id': lecture_id, 'title': title, 'start_time': start_time, 'end_time': end_time};
 	LoadingOn();
@@ -89,13 +89,12 @@ const ApiInsertClass = (lecture_id, title, start_time, end_time, callback)=> {
 	});
 }
 
-// 분반 수정 업데이트 API
-const ApiUpdateClass = (class_id, start_date, start_time, end_date, end_time, callback)=> {
+// 문제집 수정 업데이트 API
+const ApiUpdateClass = (class_id, title, start_time, end_time, callback)=> {
 	let sendData = {
 		'id': class_id,
-		'start_date': start_date,
+		'title': title,
 		'start_time': start_time,
-		'end_date': end_date,
 		'end_time': end_time
 	}
 	LoadingOn();
@@ -117,7 +116,7 @@ const ApiUpdateClass = (class_id, start_date, start_time, end_date, end_time, ca
 	});
 }
 
-// 분반 삭제 API
+// 문제집 삭제 API
 const ApiDeleteClass = (class_id, callback)=> {
 	let sendData = {'id': class_id};
 	LoadingOn();
@@ -231,6 +230,8 @@ const ApiInsertDatabase = (lecture_id, file, callback)=> {
 
 // 데이터베이스 조회 API
 const ApiGetDatabase = (lecture_id, callback)=> {
+	callback([{'mt_id': 1, 'mt_table_name': 'practice'}]);
+	return;
 	let sendData = {'id': lecture_id};
 	LoadingOn();
 	FETCH('/API/V1/database/view', 'POST', sendData, (data)=> {

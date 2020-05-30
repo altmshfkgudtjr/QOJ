@@ -233,14 +233,17 @@ const ModifyClassOneSubmit = (class_id)=> {
 		document.querySelector("#class_title_input").focus();
 		return;
 	}
-	let start_date, start_time, end_date, end_time;
+	let title, start_date, start_time, end_date, end_time;
+	title = document.querySelector("#class_title_input").value;
 	start_date = document.querySelector("#time_start_date").value;
 	start_time = document.querySelector("#time_start_time").value;
+	start_time = start_date+' '+start_time+':00';
 	end_date = document.querySelector("#time_end_date").value;
 	end_time = document.querySelector("#time_end_time").value;
+	end_time = end_date+' '+end_time+':00';
 
 	// 업데이트 실행
-	ApiUpdateClass(class_id, start_date, start_time, end_date, end_time, (data)=> {
+	ApiUpdateClass(class_id, title, start_time, end_time, (data)=> {
 		console.log(data);
 	});
 }
