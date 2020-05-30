@@ -33,13 +33,14 @@ module.exports = {
         contentBase: [__dirname, path.join(__dirname, '/dist/')],
         inline: true,
         hot: true,
-        host: "0.0.0.0",
+        host: "localhost",
         port: 8000,
         historyApiFallback: {
              rewrites: [
                 { from: /^\/$/, to: '/index.html' }
             ]
         },
+        
     },
     devtool: 'inline-source-map',
     mode: 'development'

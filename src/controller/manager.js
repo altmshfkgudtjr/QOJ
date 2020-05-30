@@ -45,6 +45,28 @@ const ApiActivateClass = (class_id, activation)=> {
 	});
 }
 
+// 시험모드 활성화/비활성화 API
+const ApiActivateExam = (class_id, activation)=> {
+	let sendData = {'id': class_id, 'activate': activation};
+	LoadingOn();
+	FETCH('/API/V1/class_manage/activate_exam', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (activation == true) {
+				Snackbar('This class is activate.');
+			} else {
+				Snackbar('This class is deactivate.');
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
 // 분반 추가 API
 const ApiInsertClass = (lecture_id, title, start_time, end_time, callback)=> {
 	let sendData = {'id': lecture_id, 'title': title, 'start_time': start_time, 'end_time': end_time};
@@ -189,7 +211,7 @@ const ApiInsertDatabase = (lecture_id, file, callback)=> {
 	sendData.append('id', lecture_id);
 	sendData.append('file', file);
 	LoadingOn();
-	FETCH_FILE('/API/V1/problem/upload_sql', 'POST', sendData, (data)=> {
+	FETCH_FILE('/API/V1/database/insert', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -207,4 +229,49 @@ const ApiInsertDatabase = (lecture_id, file, callback)=> {
 	});
 }
 
-export { ApiManagerClasses, ApiActivateClass, ApiInsertClass, ApiUpdateClass, ApiDeleteClass, ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem, ApiInsertDatabase }
+// 데이터베이스 조회 API
+const ApiGetDatabase = (lecture_id, callback)=> {
+	let sendData = {'id': lecture_id};
+	LoadingOn();
+	FETCH('/API/V1/database/view', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
+// 데이터베이스 삭제 API
+const ApiDeleteDatabase = (db_id, callback)=> {
+	let sendData = {'id': db_id};
+	LoadingOn();
+	FETCH('/API/V1/database/drop', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
+export { ApiManagerClasses, ApiActivateClass, ApiActivateExam, ApiInsertClass, ApiUpdateClass, ApiDeleteClass,
+ ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase }

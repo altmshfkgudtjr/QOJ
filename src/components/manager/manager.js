@@ -1,6 +1,6 @@
 import { router } from '../../router.js'
 import { ApiLectureList, ApiProblemsInfo, ApiLectureProblems } from '../../controller/lecture.js'
-import { ApiActivateClass, ApiInsertDatabase } from '../../controller/manager.js'
+import { ApiActivateClass, ApiActivateExam, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase } from '../../controller/manager.js'
 import { ProblemForm, AddProblemEvent, ModifyProblemEvent, ReturnContentForm } from './problem.js'
 import { AddClassOne, ModifyClassOne, DeleteClassOneEvent, AddClassOneEvent, ModifyClassOneEvent } from './classes.js'
 import { Snackbar } from '../snackbar.js'
@@ -11,11 +11,15 @@ const Manager = ()=> {
 			<div id="menu_title" class="menu_title noselect" data-name="">Loading..</div>
 			<div id="menu"></div>
 			<div id="lecture_manage_btn" class="lecture_add_btn noselect pointer">+</div>
-			<div id="sql_btn" class="sql_btn noselect pointer">.sql push&nbsp;&nbsp;<i class="fas fa-file-upload"></i></div>
-			<input id="sql_file" type="file" class="display_none" accept=".sql">
 		</div>
 		<div id="content" class="content_container_block">
 			<div class="manager_empty_box noselect wow animated zoomIn">Welcome to management of class!</div>
+		</div>
+		<div class="database_menu">
+			<div class="menu_title noselect" data-name="">Using DB Tables</div>
+			<div id="database_menu"></div>
+			<div id="sql_btn" class="sql_btn noselect pointer">.sql push&nbsp;&nbsp;<i class="fas fa-file-upload"></i></div>
+			<input id="sql_file" type="file" class="display_none" accept=".sql">
 		</div>
 	`;
 	return view;
@@ -66,6 +70,8 @@ const ManagerEvent = ()=> {
 	// sql 파일 업로드 이벤트
 	document.querySelector("#sql_btn").addEventListener("click", UploadSQL);
 	document.querySelector("#sql_file").addEventListener("change", UploadSQLEvent, false);
+	// 사용 중인 Database 조회
+	ViewDatabase();
 }
 
 // 주차 관리
@@ -75,6 +81,7 @@ const ManageClass = (class_id)=> {
 	// 문제집 정보 반환
 	new Promise((resolve, reject)=> {
 		ApiProblemsInfo(class_id, (data)=> {
+			console.log(data);
 			let title_box = document.createElement("div");
 			title_box.id = 'class_title';
 			title_box.classList.add(...['content_container_title', 'noselect']);
@@ -117,13 +124,37 @@ const ManageClass = (class_id)=> {
 			class_activate.innerHTML = `
 				Activate&nbsp;&nbsp;
 				<label class="class_activate">
-					<input id="class_activate" type="checkbox" checked>
+					<input id="class_activate" type="checkbox">
 					<span class="class_activate_slider"></span>
 				</label>
 			`;
 			target.append(class_activate);
+			if (data['pg_activate'] == 1) {
+				document.querySelector("#class_activate").checked = true;
+			} else {
+				document.querySelector("#class_activate").checked = false;
+			}
 			document.querySelector("#class_activate").addEventListener('change', ()=> {
 				ActivateClass(class_id);
+			});
+
+			let exam_activate = document.createElement('div');
+			exam_activate.classList.add(...['exam_activate_box', 'noselect', 'wow', 'animated', 'fadeInRight']);
+			exam_activate.innerHTML = `
+				Exam Mode&nbsp;&nbsp;
+				<label class="class_activate exam_activate">
+					<input id="exam_activate" type="checkbox">
+					<span class="class_activate_slider"></span>
+				</label>
+			`;
+			target.append(exam_activate);
+			if (data['pg_exam'] == 1) {
+				document.querySelector("#exam_activate").checked = true;
+			} else {
+				document.querySelector("#exam_activate").checked = false;
+			}
+			document.querySelector("#exam_activate").addEventListener('change', ()=> {
+				ActivateExam(class_id);
 			});
 
 			let problem_box = document.createElement('div');
@@ -219,6 +250,12 @@ const ActivateClass = (class_id)=> {
 	ApiActivateClass(class_id, activate);
 }
 
+// 시험모드 활성화/비활성화
+const ActivateExam = (class_id)=> {
+	let activate = document.querySelector("#exam_activate").checked;
+	ApiActivateExam(class_id, activate);
+}
+
 // sql 파일 업로드
 const UploadSQL = ()=> {
 	document.querySelector("#sql_file").click();
@@ -253,7 +290,46 @@ const UploadSQLEvent = ()=> {
 	})
 }
 
+// 데이터베이스 조회
+const ViewDatabase = ()=> {
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	//let data = [{'mt_id': 1, 'mt_table_name': 'practice'}];
+	ApiGetDatabase(lecture_id, (data)=> {
+		let target = document.querySelector("#database_menu");
+		for (let db of data) {
+			let db_btn = document.createElement('div');
+			db_btn.classList.add(...['database_menu_item', 'noselect', 'pointer']);
+			db_btn.textContent = db['mt_table_name'];
 
+			let hidden_view = document.createElement('div');
+			hidden_view.classList.add('database_menu_item_hidden');
+			hidden_view.innerHTML = `<i class="fas fa-times"></i>&nbsp;&nbsp; Drop?`;
+			db_btn.append(hidden_view);
+
+			db_btn.addEventListener("click", ()=> {
+				DropDatabase(db['mt_id'], db['mt_table_name']);
+			})
+
+			target.append(db_btn);
+		}
+	});
+}
+
+// 데이터베이스 삭제
+const DropDatabase = (db_id, db_title)=> {
+	if (!confirm(`Drop table ${db_title}. Continue?`)) {
+		return;
+	}
+	ApiDeleteDatabase(db_id, (data)=> {
+		Snackbar("Table deleted successful!");
+	});
+}
 
 
 export { Manager, ManagerEvent, ModifyClassEventBinding }

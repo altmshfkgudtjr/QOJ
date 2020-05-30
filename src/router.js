@@ -6,6 +6,7 @@ import { BoardContainer } from './containers/board.js'
 import { LectureContainer } from './containers/lecture.js'
 import { UserContainer } from './containers/user.js'
 import { ManagerContainer } from './containers/manager.js'
+import { CreationContainer } from './containers/creation.js'
 import { NotfoundContainer } from './containers/notfound.js'
 
 const app_ = new App();
@@ -50,6 +51,13 @@ router.get("/manager", function(req, router){
 	document.title = "관리 | Query-Oline Judge";
 	ManagerContainer();
 }).setName("Manager");
+
+// Creation
+router.get("/creation", function(req, router){
+	app_.reset();
+	document.title = "창조자 | Query-Oline Judge";
+	CreationContainer();
+}).setName("Creation");
 
 // 404 Not found!
 router.notFoundHandler(function(){

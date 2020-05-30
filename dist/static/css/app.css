@@ -695,6 +695,7 @@ a, div {
 	box-sizing: border-box;
 	box-sizing: border-box;
 	padding: 10px;
+	overflow: hidden;
 }
 .shell_btn {
 	position: relative;
@@ -970,6 +971,16 @@ a, div {
 	color: rgba(255,255,255,.8);
 	line-height: 32px;
 }
+.exam_activate_box {
+	position: relative;
+	width: 235px;
+	height: 40px;
+	box-sizing: border-box;
+	margin-left: auto;
+	text-align: center;
+	color: rgba(255,255,255,.8);
+	line-height: 32px;
+}
 .class_activate {
   position: relative;
   display: inline-block;
@@ -1008,6 +1019,9 @@ a, div {
 }
 .class_activate > input:checked + .class_activate_slider {
   background-color: var(--qoj-skyblue);
+}
+.exam_activate > input:checked + .class_activate_slider {
+  background-color: var(--qoj-red);
 }
 .class_activate > input:focus + .class_activate_slider {
   box-shadow: 0 0 1px #2196F3;
@@ -1088,4 +1102,71 @@ a, div {
 	line-height: 60px;
 	color: white;
 	text-shadow: 0 0 1px white;
+}
+.create_lecture_btn {
+	position: relative;
+	flex-grow: 1;
+	flex: 0 1 calc(100% * (1/3) - 30px);
+	margin: 20px;
+	margin-left: 0;
+	height: 200px;
+	transition: .2s var(--qoj-transition);
+	box-sizing: border-box;
+	overflow: hidden;
+	border: 2px dashed rgba(255,255,255,.2);
+	color: var(--qoj-skyblue);
+	font-size: 40px;
+	text-align: center;
+	line-height: 200px;
+	transition: .2s var(--qoj-transition);
+}
+.create_lecture_btn:hover {
+	background-color: var(--qoj-background);
+	border: 2px dashed rgba(255,255,255,0);
+	box-shadow: var(--qoj-boxshadow);
+	font-size: 60px;
+}
+.database_menu {
+	position: relative;
+	width: 300px;
+	min-width: 300px;
+	height: auto;
+	min-height: calc(100vh - 60px);
+	background-color: rgba(50,50,50,.6);
+}
+.database_menu_item {
+	position: relative;
+	width: 90%;
+	height: auto;
+	min-height: 60px;
+	line-height: 30px;
+	margin: auto;
+	color: var(--qoj-yellow);
+	border-radius: 5px;
+	box-sizing: border-box;
+	padding: 5px 20px;
+	transition: .4s var(--qoj-transition);
+	background-color: black;
+	box-shadow: var(--qoj-boxshadow);
+}
+.database_menu_item_hidden {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0;
+	left: 0;
+	border-radius: 5px;
+	box-sizing: border-box;
+	text-align: center;
+	visibility: hidden;
+	opacity: 0;
+	color: var(--qoj-red);
+	background-color: rgba(0,0,0,0);
+	transition: .2s var(--qoj-transition);
+	line-height: 60px;
+}
+.database_menu_item:hover .database_menu_item_hidden {
+	visibility: visible;
+	opacity: 1;
+	background-color: rgba(0,0,0,.8);
 }
