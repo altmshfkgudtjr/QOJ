@@ -24,6 +24,7 @@ const Problem = ()=> {
 		<div class="shell_result">
 			<div class="shell_result_content">
 				<div class="problem_info noselect">실행 결과</div>
+				<div id="shell_result"></div>
 			</div>
 		</div>
 		<div class="shell_ctl noselect">
@@ -43,10 +44,10 @@ const ProblemEvent = (problem_id)=> {
 		ChangeCodeLine();
 	});
 	ApiProblem(problem_id, (data)=> {
-		document.querySelector("#problem_title").textContent = data['p_name'];
+		document.querySelector("#problem_title").textContent = data['p_title'];
 		document.querySelector("#problem_post").textContent = data['p_content'];
 		if (data['up_query'] == null)
-			document.querySelector("#shell").innerHTML = "SELECT * FROM test;";
+			document.querySelector("#shell").innerHTML = "";
 		else
 			document.querySelector("#shell").innerHTML = data['up_query'];
 		// 코드 실행 버튼
@@ -58,26 +59,76 @@ const ProblemEvent = (problem_id)=> {
 			SubmitQuery(data['p_id']);
 		});
 	});
+	// 복붙할 때, 개행은 유지한 채로, style을 제거시켜준다.
+	document.querySelector('#shell').addEventListener("paste", function(e) {
+		OnPaste_StripFormatting(this, event);
+	});
 }
 
 
 // 코드실행
 const RunQuery = ()=> {
-	let query = document.querySelector("#shell").textContent.trim().replace(/\s{2,}/gi, ' ');
-	ApiRunProblem(query, (data)=> {
-		console.log(data);
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	// Enter -> 공백으로, 2칸 이상 공백 -> 한칸 공백으로
+	let query = document.querySelector("#shell").innerText.trim().replace(/\n/gi, " ").replace(/\s{2,}/gi, ' ');
+	ApiRunProblem(query, lecture_id, (data)=> {
+		let target = document.querySelector("#shell_result");
+		if (typeof(data) == 'string') {
+			let result = data;
+			target.innerHTML = "";
+			target.textContent = result;
+		} else {
+			let table = document.createElement('table');
+			let post = `<thead><tr>`;
+			for (let info of Object.keys(data[0])) {
+				post += `<th>${info}</th>`;
+			}
+			post += `</tr></thead>`;
+
+			post += `<tbody>`;
+			for (let row of data) {
+				post += `<tr>`;
+				for (let info of Object.keys(data[0])) {
+					post += `<td>${row[info]}</td>`;
+				}
+				post += `</tr>`;
+			}
+			post += `</tbody>`
+
+			table.innerHTML = post;
+
+			target.textContent = "";
+			target.append(table);
+		}
 	});
 }
 
 // 코드제출
 const SubmitQuery = (problem_id)=> {
-	let query = document.querySelector("#shell").textContent.trim();
-	console.log(query);
-	ApiSubmitProblem(problem_id, query, (data)=> {
-		if (data['result'] == 'right') {
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	let query = document.querySelector("#shell").innerText.trim().replace(/\n/gi, " ").replace(/\s{2,}/gi, ' ');
+	ApiSubmitProblem(lecture_id, problem_id, query, (data)=> {
+		if (data == true) {
 			Snackbar("Right Answer!", "green");
-		} else if (data['result'] == 'wrong') {
+		} else if (data == false) {
 			Snackbar("Wrong Answer", "red");
+		} else {
+			Snackbar("Wrong Answer", "red");
+			let result = data;
+			document.querySelector("#shell_result").innerHTML = "";
+			document.querySelector("#shell_result").textContent = result;
 		}
 	});
 }
@@ -128,5 +179,32 @@ const ChangeCodeLine = ()=> {
 		}
 	}
 }
+
+// 복붙할 때, 개행은 유지한 채로, style을 제거시켜준다.
+let _onPaste_StripFormatting_IEPaste = false;
+function OnPaste_StripFormatting(elem, e) {
+
+    if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
+        e.preventDefault();
+        var text = e.originalEvent.clipboardData.getData('text/plain');
+        window.document.execCommand('insertText', false, text);
+    }
+    else if (e.clipboardData && e.clipboardData.getData) {
+        e.preventDefault();
+        var text = e.clipboardData.getData('text/plain');
+        window.document.execCommand('insertText', false, text);
+    }
+    else if (window.clipboardData && window.clipboardData.getData) {
+        // Stop stack overflow
+        if (!_onPaste_StripFormatting_IEPaste) {
+            _onPaste_StripFormatting_IEPaste = true;
+            e.preventDefault();
+            window.document.execCommand('ms-pasteTextOnly', false);
+        }
+        _onPaste_StripFormatting_IEPaste = false;
+    }
+
+}
+
 
 export { Problem, ProblemEvent, ChangeCodeLine }

@@ -25,9 +25,9 @@ const ApiManagerClasses = (callback)=> {
 
 // 분반 활성화/비활성화 API
 const ApiActivateClass = (class_id, activation)=> {
-	let sendData = {'id': class_id, 'activate': activation};
+	let sendData = {'pg_id': class_id, 'pg_activate': activation};
 	LoadingOn();
-	FETCH('/API/V1/class_manage/activate_class', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/change_activate', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (activation == true) {
@@ -47,15 +47,15 @@ const ApiActivateClass = (class_id, activation)=> {
 
 // 시험모드 활성화/비활성화 API
 const ApiActivateExam = (class_id, activation)=> {
-	let sendData = {'id': class_id, 'activate': activation};
+	let sendData = {'pg_id': class_id, 'pg_exam': activation};
 	LoadingOn();
-	FETCH('/API/V1/class_manage/activate_exam', 'POST', sendData, (data)=> {
+	FETCH('API/V1/problem_manage/change_exam', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (activation == true) {
-				Snackbar('This class is activate.');
+				Snackbar('Exam mode start.');
 			} else {
-				Snackbar('This class is deactivate.');
+				Snackbar('Exam mode end.');
 			}
 		} else if (data.API_STATUS == 'fail') {
 			console.log(data);
@@ -68,10 +68,10 @@ const ApiActivateExam = (class_id, activation)=> {
 }
 
 // 문제집 추가 API
-const ApiInsertClass = (lecture_id, title, start_time, end_time, callback)=> {
-	let sendData = {'id': lecture_id, 'title': title, 'start_time': start_time, 'end_time': end_time};
+const ApiInsertClass = (lecture_id, title, callback)=> {
+	let sendData = {'class_id': lecture_id, 'pg_title': title};
 	LoadingOn();
-	FETCH('/API/V1/class_manage/insert_class', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/create_problem_group', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -92,13 +92,13 @@ const ApiInsertClass = (lecture_id, title, start_time, end_time, callback)=> {
 // 문제집 수정 업데이트 API
 const ApiUpdateClass = (class_id, title, start_time, end_time, callback)=> {
 	let sendData = {
-		'id': class_id,
-		'title': title,
-		'start_time': start_time,
-		'end_time': end_time
+		'pg_id': class_id,
+		'pg_title': title,
+		'pg_exam_start': start_time,
+		'pg_exam_end': end_time
 	}
 	LoadingOn();
-	FETCH('/API/V1/class_manage/update_class', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/update_problem_group', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -118,9 +118,31 @@ const ApiUpdateClass = (class_id, title, start_time, end_time, callback)=> {
 
 // 문제집 삭제 API
 const ApiDeleteClass = (class_id, callback)=> {
-	let sendData = {'id': class_id};
+	let sendData = {'pg_id': class_id};
 	LoadingOn();
-	FETCH('/API/V1/class_manage/delete_class', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/delete_problem_group', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
+// 문제 호출 API
+const ApiViewProblem = (class_id, problem_id, callback)=> {
+	let sendData = {'class_id': class_id, 'p_id': problem_id};
+	LoadingOn();
+	FETCH('/API/V1/problem_manage/admin_problem', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -140,9 +162,9 @@ const ApiDeleteClass = (class_id, callback)=> {
 
 // 문제 생성 API
 const ApiInsertProblem = (class_id, title, post, query, callback)=> {
-	let sendData = {'id': class_id, 'title': title, 'post': post, 'query': query};
+	let sendData = {'pg_id': class_id, 'p_title': title, 'p_content': post, 'p_answer': query};
 	LoadingOn();
-	FETCH('/API/V1/problem/insert_problem', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/create_problem', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -162,9 +184,9 @@ const ApiInsertProblem = (class_id, title, post, query, callback)=> {
 
 // 문제 수정 API
 const ApiModifyProblem = (problem_id, title, post, query, callback)=> {
-	let sendData = {'id': problem_id, 'title': title, 'post': post, 'query': query};
+	let sendData = {'p_id': problem_id, 'p_title': title, 'p_content': post, 'p_answer': query};
 	LoadingOn();
-	FETCH('/API/V1/problem/update_problem', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/update_problem', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -184,9 +206,9 @@ const ApiModifyProblem = (problem_id, title, post, query, callback)=> {
 
 // 문제 삭제 API
 const ApiDeleteProblem = (problem_id, callback)=> {
-	let sendData = {'id': problem_id};
+	let sendData = {'p_id': problem_id};
 	LoadingOn();
-	FETCH('/API/V1/problem/delete_problem', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/delete_problem', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -207,10 +229,10 @@ const ApiDeleteProblem = (problem_id, callback)=> {
 // 데이터베이스 삽입 API
 const ApiInsertDatabase = (lecture_id, file, callback)=> {
 	let sendData = new FormData();
-	sendData.append('id', lecture_id);
+	sendData.append('class_id', lecture_id);
 	sendData.append('file', file);
 	LoadingOn();
-	FETCH_FILE('/API/V1/database/insert', 'POST', sendData, (data)=> {
+	FETCH_FILE('/API/V1/problem_manage/push_testdb', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -230,11 +252,9 @@ const ApiInsertDatabase = (lecture_id, file, callback)=> {
 
 // 데이터베이스 조회 API
 const ApiGetDatabase = (lecture_id, callback)=> {
-	callback([{'mt_id': 1, 'mt_table_name': 'practice'}]);
-	return;
-	let sendData = {'id': lecture_id};
+	let sendData = {'class_id': lecture_id};
 	LoadingOn();
-	FETCH('/API/V1/database/view', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/get_testdb', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -253,10 +273,85 @@ const ApiGetDatabase = (lecture_id, callback)=> {
 }
 
 // 데이터베이스 삭제 API
-const ApiDeleteDatabase = (db_id, callback)=> {
-	let sendData = {'id': db_id};
+const ApiDeleteDatabase = (db_id, lecture_id, callback)=> {
+	let sendData = {'mt_id': db_id, 'class_id': lecture_id};
 	LoadingOn();
-	FETCH('/API/V1/database/drop', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/delete_testdb', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
+// 분반 Member 수정 API
+const ApiUpdateLectureMember = (lecture_id, members, callback)=> {
+	let sendData = {'class_id': lecture_id, 'user_list': members};
+	LoadingOn();
+	FETCH('/API/V1/class_manage/push_user', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
+// 분반 모든 Memberd에 대한 점수 정보 API
+const ApiUserClassScore = (class_id, callback)=> {
+	callback([
+		{
+			'problem_id': 1,
+			'problem_name': '학생을 찾아라!',
+			'user_id': '12001200',
+			'user_name': '홍길동',
+			'up_state': 1,
+		},
+		{
+			'problem_id': 1,
+			'problem_name': '학생을 찾아라!',
+			'user_id': '16450202',
+			'user_name': '원빈',
+			'up_state': 0,
+		},
+		{
+			'problem_id': 2,
+			'problem_name': '학생을 찾아라!-2',
+			'user_id': '12001200',
+			'user_name': '홍길동',
+			'up_state': 1,
+		},
+		{
+			'problem_id': 2,
+			'problem_name': '학생을 찾아라!-2',
+			'user_id': '16450202',
+			'user_name': '원빈',
+			'up_state': null,
+		}
+	]);
+	return;
+	let sendData = {'id': class_id};
+	LoadingOn();
+	FETCH('/API/V1/class/score', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -275,4 +370,5 @@ const ApiDeleteDatabase = (db_id, callback)=> {
 }
 
 export { ApiManagerClasses, ApiActivateClass, ApiActivateExam, ApiInsertClass, ApiUpdateClass, ApiDeleteClass,
- ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase }
+ ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase, ApiUpdateLectureMember,
+ ApiUserClassScore, ApiViewProblem }

@@ -3,6 +3,7 @@ import { ApiUserUpdate, ApiUserDelete, ApiUserProblems } from '../../controller/
 import { ProblemEvent } from '../lecture/problem.js'
 import { router } from '../../router.js'
 import { SelectLayout } from '../lecture/layout.js'
+import { MenuUrlCheck } from '../lecture/menu.js'
 
 const User = ()=> {
 	let view = `
@@ -109,7 +110,6 @@ const UserDelete = ()=> {
 
 // 사용자 푼 문제 생성 함수
 const UserGetProblem = ()=> {
-	return;	// 임시 코드
 	ApiUserProblems((data)=> {
 		let target = document.querySelector("#problems");
 		target.innerHTML = "";
@@ -127,7 +127,7 @@ const UserGetProblem = ()=> {
 
 			let problem_title = document.createElement('div');
 			problem_title.classList.add('content_container_class_title');
-			problem_title.textContent = problem['p_name'];
+			problem_title.textContent = problem['p_title'];
 			problem_cont.append(problem_title);
 
 			let problem_score_box = document.createElement('div');
@@ -142,7 +142,8 @@ const UserGetProblem = ()=> {
 			problem_cont.addEventListener("click", ()=> {
 				history.pushState(null,null,location.href.split('lecture')[3]);
 				// 문제 View는 시험모드때문에 History가 없음.
-				router._goTo("/lecture");
+				router._goTo(`/lecture#cl?${problem['class_id']}#cn?${problem['pg_id']}`);
+				MenuUrlCheck();
 				SelectLayout(1);			// Layout 변경
 				ProblemEvent(problem['p_id']);
 			})

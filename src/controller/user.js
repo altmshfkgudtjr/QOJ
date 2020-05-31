@@ -55,7 +55,7 @@ const ApiUserSignUp = (id, pw, name, email, callback)=> {
 
 // 회원정보수정 API
 const ApiUserUpdate = (pw, re_pw, email, callback)=> {
-	let sendData = {'pw': pw, 're_pw': re_pw, 'email': email};
+	let sendData = {'pw': pw, 'check_pw': re_pw, 'email': email};
 	LoadingOn();
 	FETCH('/API/V1/auth/update', 'POST', sendData, (data)=> {
 		LoadingOff();
@@ -78,7 +78,7 @@ const ApiUserUpdate = (pw, re_pw, email, callback)=> {
 // 회원탈퇴 API
 const ApiUserDelete = (callback)=> {
 	LoadingOn();
-	FETCH('/API/V1/auth/update', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/auth/withdrawal', 'GET', null, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -141,7 +141,7 @@ const ApiUserClasses = (callback)=> {
 // 사용자 푼 문제 반환 API
 const ApiUserProblems = (callback)=> {
 	LoadingOn();
-	FETCH('/API/V1/auth/get_problem_list', 'GET', null, (data)=> {
+	FETCH('/API/V1/auth/get_myproblem', 'GET', null, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {

@@ -254,6 +254,22 @@ a, div {
 	font-size: 25em;
 	color: rgba(15, 170, 200, .8);
 }
+@media screen and (max-width: 800px) {
+	.background_item1 {
+		position: absolute;
+		top: 20vh;
+		left: 10vw;
+		font-size: 8em;
+		color: rgba(15, 170, 200, .8);
+	}
+	.background_item2 {
+		position: absolute;
+		top: 60vh;
+		right: 10vw;
+		font-size: 10em;
+		color: rgba(15, 170, 200, .8);
+	}
+}
 .box_info {
 	position: relative;
 	width: 90%;
@@ -263,6 +279,12 @@ a, div {
 	font-size: 30px;
 	line-height: 50px;
 	color: #888;
+}
+@media screen and (max-width: 800px) {
+	.box_info {
+		font-size: 20px;
+		margin: 20px auto 10px auto;
+	}
 }
 .login_box {
 	position: relative;
@@ -281,6 +303,11 @@ a, div {
 	line-height: 40px;
 	padding-bottom: 10px;
 	border-bottom: 1px solid #444;
+}
+@media screen and (max-width: 800px) {
+	.login_title {
+		font-size: 18px;
+	}
 }
 .login_input {
 	outline: none;
@@ -301,6 +328,13 @@ a, div {
 }
 .login_input:focus {
 	opacity: 1;
+}
+@media screen and (max-width: 800px) {
+	.login_input {
+		width: 100%;
+		height: 40px;
+		margin: 15px auto;
+	}
 }
 .login_submit {
 	position: relative;
@@ -326,6 +360,12 @@ a, div {
 	padding-top: 150px;
 	text-align: center;
 }
+@media screen and (max-width: 800px) {
+	.sql_image_cont {
+		height: 300px;
+		padding-top: 20px;
+	}
+}
 .sql_image {
 	position: relative;
 	width: auto;
@@ -343,6 +383,7 @@ a, div {
 	width: 100vw;
 	height: auto;
 	margin: 0 20px;
+	overflow-x: auto;
 }
 .class_container_title {
 	position: relative;
@@ -353,6 +394,11 @@ a, div {
 	font-size: 30px;
 	line-height: 50px;
 	color: #888;
+}
+@media screen and (max-width: 800px) {
+	.class_container_title {
+		margin: 20px auto 10px auto;
+	}
 }
 .class_content_container{
 	position: relative;
@@ -432,6 +478,11 @@ a, div {
 	min-height: calc(100vh - 60px);
 	background-color: rgba(50,50,50,.6);
 }
+@media screen and (max-width: 800px) {
+	.menu {
+		min-width: 200px;
+	}
+}
 .menu_title {
 	position: relative;
 	width: 100%;
@@ -498,13 +549,14 @@ a, div {
 .content_container_time_cont > span {
 	color: white;
 }
+
 .content_container_class_cont {
 	position: relative;
 	display: flex;
 	flex-flow: row wrap;
 	flex-direction: row;
 	width: 100%;
-	min-width: 1000px;
+	min-width: 800px;
 	height: auto;
 	margin: 20px 0;
 }
@@ -521,6 +573,12 @@ a, div {
 	padding: 32px;
 	padding-bottom: 50px;
 	overflow: hidden;
+}
+.content_container_class:nth-child(4n+1) {
+	margin-left: 0;
+}
+.content_container_class:nth-child(4n) {
+	margin-right: 0;
 }
 .content_container_class:hover {
 	background-color: rgb(52, 52, 56);
@@ -608,6 +666,11 @@ a, div {
 	box-sizing: border-box;
 	background-color: #2A2A2C;
 }
+@media screen and (max-width: 800px) {
+	.shell_container {
+		min-width: 200px;
+	}
+}
 .problem_title {
 	position: relative;
 	color: rgba(255,255,255,.8);
@@ -685,9 +748,10 @@ a, div {
 }
 .shell_result_content {
 	position: relative;
-	width: 100%;
-	height: 100%;
-	min-width: 300px;
+	width: auto;
+	height: auto;
+	min-width: 100%;
+	min-height: 100%;
 }
 .shell_ctl {
 	position: relative;
@@ -777,6 +841,7 @@ a, div {
 	width: 80%;
 	max-width: 1000px;
 	height: auto;
+	margin: auto;
 	margin-bottom: 200px;
 	display: flex;
 	flex-flow: row wrap;
@@ -1014,7 +1079,7 @@ a, div {
   height: 26px;
   width: 26px;
   left: 4px;
-  bottom: 2px;
+  bottom: 2.5px;
   background-color: white;
   -webkit-transition: .4s;
   transition: .4s;
@@ -1106,6 +1171,11 @@ a, div {
 	color: white;
 	text-shadow: 0 0 1px white;
 }
+@media screen and (max-width: 800px) {
+	.sql_btn {
+		font-size: 16px;
+	}
+}
 .class_content {
 	position: relative;
 	flex-grow: 1;
@@ -1159,13 +1229,18 @@ a, div {
 	min-height: calc(100vh - 60px);
 	background-color: rgba(50,50,50,.6);
 }
+@media screen and (max-width: 800px) {
+	.database_menu {
+		min-width: 200px;
+	}
+}
 .database_menu_item {
 	position: relative;
 	width: 90%;
 	height: auto;
 	min-height: 60px;
 	line-height: 30px;
-	margin: auto;
+	margin: 0 auto 10px auto;
 	color: var(--qoj-yellow);
 	border-radius: 5px;
 	box-sizing: border-box;
@@ -1195,6 +1270,132 @@ a, div {
 	opacity: 1;
 	background-color: rgba(0,0,0,.8);
 }
+.exam_start_btn {
+	position: relative;
+	width: 300px;
+	height: 100px;
+	margin: auto;
+	box-sizing: border-box;
+	color: var(--qoj-red);
+	text-align: center;
+	line-height: 100px;
+	transition: .1s var(--qoj-transition);
+	background-color: var(--qoj-background);
+	box-shadow: var(--qoj-boxshadow);
+	border: 2px solid var(--qoj-background);
+}
+.exam_start_btn:hover {
+	font-size: 20px;
+	border: 2px solid var(--qoj-red);
+	border-radius: 20px;
+}
+.analysis_btn {
+	position: absolute;
+	width: 300px;
+	height: 50px;
+	bottom: 0;
+	margin-left: auto;
+	margin-right: auto;
+	left: 0;
+	right: 0;
+	background-color: var(--qoj-green);
+	color: white;
+	font-size: 20px;
+	line-height: 50px;
+	text-align: center;
+	transition: .2s var(--qoj-transition);
+}
+.analysis_btn:hover {
+	height: 70px;
+	line-height: 70px;
+}
+@media screen and (max-width: 800px) {
+	.analysis_btn {
+		width: 200px;
+		font-size: 16px;
+	}
+}
+.content_score_cont {
+	position: relative;
+	width: 100%;
+	min-width: 800px;
+	height: auto;
+	margin: 20px 0;
+	overflow-x: auto;
+	font-size: 16px;
+	box-sizing: border-box;
+	padding-bottom: 50px;
+}
+.content_score_info_wrap {
+	position: relative;
+	display: flex;
+	width: 100%;
+	height: auto;
+	line-height: 30px;
+	margin-bottom: 10px;
+	padding: 5px 0;
+	text-align: center;
+	color: var(--qoj-skyblue);
+}
+.content_score_wrap {
+	position: relative;
+	display: flex;
+	width: 100%;
+	height: 60px;
+	line-height: 60px;
+	margin-bottom: 10px;
+	text-align: center;
+	color: white;
+	flex-wrap: wrap;
+}
+.content_score_info {
+	position: relative;
+	flex: 1;
+	width: auto;
+	min-width: 100px;
+	height: 100%;
+	margin: 0 5px 10px 5px;
+	background-color: var(--qoj-background);
+	border-radius: 5px;
+	text-align: center;
+	overflow: hidden;
+}
+.content_score_info_static {
+	max-width: 150px;
+}
+.content_score_info_green {
+	background-color: var(--qoj-green);
+	transition: .1s var(--qoj-transition);
+}
+.content_score_info_red {
+	background-color: var(--qoj-red);
+	transition: .1s var(--qoj-transition);
+}
+.content_score_info_green:hover, .content_score_info_red:hover {
+	box-sizing: border-box;
+	box-shadow: var(--qoj-boxshadow);
+	opacity: .8;
+}
+.content_score_info_none {
+	background-color: var(--qoj-background);
+}
+#shell_result {
+	box-sizing: border-box;
+	padding: 15px 0;
+	color: white;
+}
+table {
+	position: relative;
+	width: auto;
+	min-width: 100%;
+	border: 1px solid rgba(255,255,255,.6);
+	border-collapse: collapse;
+}
+th, td {
+	border: 1px solid rgba(255,255,255,.6);
+	padding: 5px;
+}
+
 
 
 
@@ -1258,7 +1459,7 @@ a, div {
 	width: 100%;
 	max-width: 700px;
 	height: 60px;
-	font-size: 20px;
+	font-size: 18px;
 	line-height: 40px;
 	color: rgba(255,255,255,.9);
 	background-color: rgba(0,0,0,.2);
@@ -1365,7 +1566,9 @@ a, div {
 .creation_submanger_btn {
 	position: relative;
 	width: 100%;
+	max-width: 700px;
 	height: 60px;
+	margin: auto;
 	box-sizing: border-box;
 	text-align: center;
 	font-size: 30px;

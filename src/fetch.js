@@ -68,9 +68,7 @@ const FETCH_FILE = (URL, METHOD, DATA, callback) => {
     }
 	fetch(URL, {
 		method: METHOD,
-		headers: Object.assign({
-			"Content-Type": "multipart/form-data"
-		}, authorization),
+		headers: Object.assign({}, authorization),
 		body: DATA
 	})
 	.then((res)=> {

@@ -2,7 +2,7 @@ import { router } from '../../router.js'
 import { Snackbar } from '../snackbar.js'
 import { Problem, ProblemEvent, ChangeCodeLine } from '../lecture/problem.js'
 import { ApiProblem, ApiRunProblem } from '../../controller/lecture.js'
-import { ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem } from '../../controller/manager.js'
+import { ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem, ApiViewProblem } from '../../controller/manager.js'
 
 const ProblemForm = ()=> {
 	let view = `
@@ -27,6 +27,7 @@ const ProblemForm = ()=> {
 		<div class="shell_result">
 			<div class="shell_result_content">
 				<div class="problem_info noselect">실행 결과</div>
+				<div id="shell_result"></div>
 			</div>
 		</div>
 		<div class="shell_ctl noselect">
@@ -51,10 +52,14 @@ const AddProblemEvent = (class_id)=> {
 	document.querySelector("#query_submit").addEventListener("click", ()=> {
 		AddProblem(class_id)
 	});
+	// 복붙할 때, 개행은 유지한 채로, style을 제거시켜준다.
+	document.querySelector('#shell').addEventListener("paste", function(e) {
+		OnPaste_StripFormatting(this, event);
+	});
 }
 
 // 문제 수정 이벤트
-const ModifyProblemEvent = (problem_id)=> {
+const ModifyProblemEvent = (lecture_id, problem_id)=> {
 	let target = document.querySelector('#content');
 	target.classList.remove("content_container_block");
 	target.classList.add("content_container_flex");
@@ -65,13 +70,18 @@ const ModifyProblemEvent = (problem_id)=> {
 		DeleteProblem(problem_id);
 	});
 	// 문제 내용 호출
-	ApiProblem(problem_id, (data)=> {
-		document.querySelector("#problem_title").value = data['p_name'];
+	ApiViewProblem(lecture_id, problem_id, (data)=> {
+		document.querySelector("#problem_title").value = data['p_title'];
 		document.querySelector("#problem_post").value = data['p_content'];
+		document.querySelector("#shell").innerHTML = `<div>${data['p_answer']}</div>`;
 	});
 	document.querySelector("#query_submit").innerHTML = `Modify <i class="fas fa-arrow-right"></i>`;
 	document.querySelector("#query_submit").addEventListener("click", ()=> {
 		ModifyProblem(problem_id)
+	});
+	// 복붙할 때, 개행은 유지한 채로, style을 제거시켜준다.
+	document.querySelector('#shell').addEventListener("paste", function(e) {
+		OnPaste_StripFormatting(this, event);
 	});
 }
 
@@ -96,7 +106,7 @@ const AddProblem = (class_id)=> {
 		return;
 	}
 	ApiInsertProblem(class_id, title, post, query, (data)=> {
-		router._goTo("/manager");
+		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("Problem Created Successful!");
 	});
 }
@@ -122,7 +132,7 @@ const ModifyProblem = (problem_id)=> {
 		return;
 	}
 	ApiModifyProblem(problem_id, title, post, query, (data)=> {
-		router._goTo("/manager");
+		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("Problem Modified Successful!");
 	});
 }
@@ -133,16 +143,51 @@ const DeleteProblem = (problem_id)=> {
 		return;
 	}
 	ApiDeleteProblem(problem_id, (data)=> {
-		router._goTo("/manager");
+		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("Problem Deleted Successful!");
 	})
 }
 
 // 쿼리문 실행
 const RunQuery = ()=> {
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	// Enter -> 공백으로, 2칸 이상 공백 -> 한칸 공백으로
 	let query = document.querySelector("#shell").textContent.trim().replace(/\s{2,}/gi, ' ');
-	ApiRunProblem(query, (data)=> {
-		console.log(data);
+	ApiRunProblem(query, lecture_id, (data)=> {
+		let target = document.querySelector("#shell_result");
+		if (typeof(data) == 'string') {
+			let result = data;
+			target.innerHTML = "";
+			target.textContent = result;
+		} else {
+			let table = document.createElement('table');
+			let post = `<thead><tr>`;
+			for (let info of Object.keys(data[0])) {
+				post += `<th>${info}</th>`;
+			}
+			post += `</tr></thead>`;
+
+			post += `<tbody>`;
+			for (let row of data) {
+				post += `<tr>`;
+				for (let info of Object.keys(data[0])) {
+					post += `<td>${row[info]}</td>`;
+				}
+				post += `</tr>`;
+			}
+			post += `</tbody>`
+
+			table.innerHTML = post;
+
+			target.textContent = "";
+			target.append(table);
+		}
 	});
 }
 
@@ -171,6 +216,32 @@ const drag = (e) => {
 	let screen = document.querySelector('#shell_cont');
 	document.selection ? document.selection.empty() : window.getSelection().removeAllRanges();
 	screen.style.width  = (document.querySelector("#content").offsetWidth - e.clientX + 300) + 'px';
+}
+
+// 복붙할 때, 개행은 유지한 채로, style을 제거시켜준다.
+let _onPaste_StripFormatting_IEPaste = false;
+function OnPaste_StripFormatting(elem, e) {
+
+    if (e.originalEvent && e.originalEvent.clipboardData && e.originalEvent.clipboardData.getData) {
+        e.preventDefault();
+        var text = e.originalEvent.clipboardData.getData('text/plain');
+        window.document.execCommand('insertText', false, text);
+    }
+    else if (e.clipboardData && e.clipboardData.getData) {
+        e.preventDefault();
+        var text = e.clipboardData.getData('text/plain');
+        window.document.execCommand('insertText', false, text);
+    }
+    else if (window.clipboardData && window.clipboardData.getData) {
+        // Stop stack overflow
+        if (!_onPaste_StripFormatting_IEPaste) {
+            _onPaste_StripFormatting_IEPaste = true;
+            e.preventDefault();
+            window.document.execCommand('ms-pasteTextOnly', false);
+        }
+        _onPaste_StripFormatting_IEPaste = false;
+    }
+
 }
 
 export { ProblemForm, AddProblemEvent, ModifyProblemEvent, ReturnContentForm }

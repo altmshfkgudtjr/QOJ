@@ -1,11 +1,12 @@
 import { router } from '../../router.js'
-import { ApiLectureList, ApiProblemsInfo, ApiLectureProblems } from '../../controller/lecture.js'
-import { ApiActivateClass, ApiActivateExam, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase } from '../../controller/manager.js'
+import { ApiLectureInfo, ApiLectureList, ApiProblemsInfo, ApiLectureProblems } from '../../controller/lecture.js'
+import { ApiActivateClass, ApiActivateExam, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase, ApiUpdateLectureMember } from '../../controller/manager.js'
 import { ApiGetLecture  } from '../../controller/creation.js'
 import { ProblemForm, AddProblemEvent, ModifyProblemEvent, ReturnContentForm } from './problem.js'
 import { AddClassOne, ModifyClassOne, DeleteClassOneEvent, AddClassOneEvent, ModifyClassOneEvent } from './classes.js'
 import { Snackbar } from '../snackbar.js'
 import { UserCont, UserContEvent } from '../creation/user.js'
+import { StatusEvent } from './status.js'
 
 const Manager = ()=> {
 	let view = `
@@ -38,23 +39,25 @@ const ManagerEvent = ()=> {
 	}
 	// 해당 분반 주차 반환
 	ApiLectureList(lecture_id, (data)=> {
-		document.querySelector("#menu_title").dataset.name = data[0]['class_name'];
-		document.querySelector("#menu_title").textContent = data[0]['class_name'];
-		document.querySelector("#menu_title").addEventListener("click", ()=> {
-			// 문제 작성/수정 중 나가기
-			if (document.querySelector("#shell") != null || document.querySelector("#creation_sub") != null) {
-				if (!confirm("WARNING! What you wrote is not saved! Don't change your determine?")) {
-					return;
+		ApiLectureInfo(lecture_id, (data)=> {
+			document.querySelector("#menu_title").dataset.name = data['class_name'];
+			document.querySelector("#menu_title").textContent = data['class_name'];
+			document.querySelector("#menu_title").addEventListener("click", ()=> {
+				// 문제 작성/수정 중 나가기
+				if (document.querySelector("#shell") != null || document.querySelector("#creation_sub") != null) {
+					if (!confirm("WARNING! What you wrote is not saved! Don't change your determine?")) {
+						return;
+					}
 				}
-			}
-			router._goTo(`/manager${location.href.split("/manager")[1]}`);
+				router._goTo(`/manager${location.href.split("/manager")[1]}`);
+			});
 		});
 		let target = document.querySelector("#menu");
 		target.innerHTML = "";	// 메뉴 초기화
 		for (let row of data) {
 			let lecture = document.createElement('div');
 			lecture.classList.add(...['menu_item', 'noselect','pointer']);
-			lecture.textContent = row['pg_name'];
+			lecture.textContent = row['pg_title'];
 			lecture.addEventListener("click", ()=> {
 				// 문제 작성/수정 중 나가기
 				if (document.querySelector("#shell") != null || document.querySelector("#creation_sub") != null) {
@@ -98,22 +101,24 @@ const ManageClass = (class_id)=> {
 			let title_box = document.createElement("div");
 			title_box.id = 'class_title';
 			title_box.classList.add(...['content_container_title', 'noselect']);
-			title_box.dataset.name = data['pg_name'];
-			title_box.textContent = document.querySelector("#menu_title").dataset.name+' - '+data['pg_name'];
+			title_box.dataset.name = data['pg_title'];
+			title_box.textContent = document.querySelector("#menu_title").dataset.name+' - '+data['pg_title'];
 			target.append(title_box);
 
 			let time_box = document.createElement('div');
 			time_box.classList.add(...['content_container_time_cont', 'noselect']);
 			let start = null, end = null;
-			if (data['pg_exam_start'] != null) {
+			if (data['pg_exam_start'] != "Mon, 01 Jan 1990 00:00:00 GMT") {
 				start = new Date(data['pg_exam_start']);
-				start = start.getFullYear()+'-'+(start.getMonth()*1+1)+'-'+start.getstart()+" "+start.getHours()+":"+start.getMinutes()+":"+start.getSeconds();
+				start = new Date(start.setHours(start.getHours() - 9));
+				start = start.getFullYear()+'-'+(start.getMonth()*1+1)+'-'+start.getDate()+" "+start.getHours()+":"+start.getMinutes()+":"+start.getSeconds();
 			} else {
 				start = "Infinite";
 			}
-			if (data['pg_exam_end'] != null) {
+			if (data['pg_exam_end'] != "Wed, 01 Jan 3000 00:00:00 GMT") {
 				end = new Date(data['pg_exam_end']);
-				end = end.getFullYear()+'-'+(end.getMonth()*1+1)+'-'+end.getstart()+" "+end.getHours()+":"+end.getMinutes()+":"+end.getSeconds();
+				end = new Date(end.setHours(end.getHours() - 9));
+				end = end.getFullYear()+'-'+(end.getMonth()*1+1)+'-'+end.getDate()+" "+end.getHours()+":"+end.getMinutes()+":"+end.getSeconds();
 			} else {
 				end = "Infinite";
 			}
@@ -125,7 +130,6 @@ const ManageClass = (class_id)=> {
 			if (data['pg_exam_end'] == null) {
 				end_date = 'infinite';
 			}
-
 			time_box.innerHTML = `
 				<div>Start Time : <span id="class_start" data-date="${start_date}">${start}</span><div>
 				<div>End Time : <span id="class_end" data-date="${end_date}">${end}</span><div>
@@ -194,9 +198,16 @@ const ManageClass = (class_id)=> {
 			});
 			target.append(delete_btn);
 
-			resolve(data['class_id']);
+			// 통계버튼
+			let analysis_btn = document.createElement('div');
+			analysis_btn.classList.add(...['analysis_btn', 'noselect', 'pointer', 'wow', 'animated', 'fadeIn']);
+			analysis_btn.innerHTML = `Member Status&nbsp;&nbsp; <i class="fas fa-project-diagram"></i>`;
+			analysis_btn.addEventListener("click", ()=> { StatusEvent(class_id); })
+			target.append(analysis_btn);
+			resolve([data['class_id'], data['pg_id']]);
 		});
-	}).then((class_id)=> {
+	}).then((ids)=> {
+		let lecture_id = ids[0], class_id = ids[1];
 		// 해당 주차 문제 반환
 		ApiLectureProblems(class_id, (data)=> {
 			let target = document.querySelector("#class_container");
@@ -207,7 +218,7 @@ const ManageClass = (class_id)=> {
 
 				let problem_title = document.createElement('div');
 				problem_title.classList.add('content_container_class_title');
-				problem_title.textContent = problem['p_name'];
+				problem_title.textContent = problem['p_title'];
 				problem_cont.append(problem_title);
 
 				let problem_arrow = document.createElement('div');
@@ -215,7 +226,7 @@ const ManageClass = (class_id)=> {
 				problem_arrow.innerHTML = 'modify  <i class="fas fa-arrow-right"></i>';
 				problem_cont.append(problem_arrow);
 				problem_cont.addEventListener("click", ()=> {
-					ModifyProblemEventBinding(problem['p_id']);
+					ModifyProblemEventBinding(lecture_id, problem['p_id']);
 				});
 
 				target.append(problem_cont);
@@ -252,20 +263,24 @@ const AddProblemEventBinding = (class_id)=> {
 }
 
 // 문제 수정
-const ModifyProblemEventBinding = (problem_id)=> {
+const ModifyProblemEventBinding = (lecture_id, problem_id)=> {
 	document.querySelector("#content").innerHTML = ProblemForm();
-	ModifyProblemEvent(problem_id);
+	ModifyProblemEvent(lecture_id, problem_id);
 }
 
 // 주차 활성화/비활성화
 const ActivateClass = (class_id)=> {
 	let activate = document.querySelector("#class_activate").checked;
+	if (activate == true) activate = 1;
+	else activate = 0;
 	ApiActivateClass(class_id, activate);
 }
 
 // 시험모드 활성화/비활성화
 const ActivateExam = (class_id)=> {
 	let activate = document.querySelector("#exam_activate").checked;
+	if (activate == true) activate = 1;
+	else activate = 0;
 	ApiActivateExam(class_id, activate);
 }
 
@@ -292,6 +307,7 @@ const UploadSQLEvent = (lecture_id)=> {
 		return;
 	}
 	ApiInsertDatabase(lecture_id, sql, (data)=> {
+		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("SQL file applied successful!");
 	})
 }
@@ -311,7 +327,7 @@ const ViewDatabase = (lecture_id)=> {
 			db_btn.append(hidden_view);
 
 			db_btn.addEventListener("click", ()=> {
-				DropDatabase(db['mt_id'], db['mt_table_name']);
+				DropDatabase(db['mt_id'], db['mt_table_name'], lecture_id);
 			})
 
 			target.append(db_btn);
@@ -320,11 +336,12 @@ const ViewDatabase = (lecture_id)=> {
 }
 
 // 데이터베이스 삭제
-const DropDatabase = (db_id, db_title)=> {
+const DropDatabase = (db_id, db_title, lecture_id)=> {
 	if (!confirm(`Drop table ${db_title}. Continue?`)) {
 		return;
 	}
-	ApiDeleteDatabase(db_id, (data)=> {
+	ApiDeleteDatabase(db_id, lecture_id, (data)=> {
+		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("Table deleted successful!");
 	});
 }
@@ -353,14 +370,16 @@ const ManagementUser = (lecture_id)=> {
 	DisplayMemeber(lecture_id);	// 현재 분반 사용자 조회
 	// 사용자 추가
 	document.querySelector("#creation_submanger_btn").addEventListener("click", AppendMember);
+	// 업데이트 버튼 이벤트
+	document.querySelector("#creation_submit").addEventListener("click", ()=> { UpdateMemeber(lecture_id) });
 }
 
 // 분반 사용자 조회
 const DisplayMemeber = (lecture_id)=> {
 	ApiGetLecture(lecture_id, (data)=> {
-		console.log(data);
+		data = data.filter(member => member.uc_type == 0);
 		document.querySelector("#creation_sub").innerHTML = "";
-		for (let member of data['member']) {
+		for (let member of data) {
 			let box = document.createElement('input');
 			box.classList.add(...['creation_lecture_name', 'creation_lecture_name_black']);
 			Object.assign(box, {
@@ -368,7 +387,7 @@ const DisplayMemeber = (lecture_id)=> {
 				'placeholder': 'ID / Student Number',
 				'spellcheck': 'false'
 			});
-			box.value = member['id'];
+			box.value = member['user_id'];
 			document.querySelector("#creation_sub").append(box);
 		}
 	});
@@ -392,6 +411,17 @@ const AppendMember = ()=> {
 		'spellcheck': 'false'
 	});
 	document.querySelector("#creation_sub").append(member);
+}
+
+// 분반 사용자 업데이트
+const UpdateMemeber = (lecture_id)=> {
+	let members = [...document.querySelectorAll(".creation_lecture_name")].map(member => member.value);
+	members = members.filter(member => member.length > 0);
+	members = [...new Set(members)];
+	ApiUpdateLectureMember(lecture_id, members, (data)=> {
+		router._goTo(`/manager${location.href.split("/manager")[1]}`);
+		Snackbar("Memeber updated Done!");
+	});
 }
 
 

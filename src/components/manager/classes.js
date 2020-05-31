@@ -6,8 +6,11 @@ import { router } from '../../router.js'
 const AddClassOne = ()=> {
 	let view = `
 		<div id="class_modify_box" class="content_container_title noselect">
-			${document.querySelector("#menu_title").dataset.name} - <input id="class_title_input" class="content_container_title_input">
+			${document.querySelector("#menu_title").dataset.name} - <input id="class_title_input" class="content_container_title_input" placeholder="Input class name.">
 		</div>
+		<div id="class_submit_btn" class="class_modify_btn noselect pointer wow animated fadeInRight">Create&nbsp; <i class="fas fa-arrow-right"></i></div>
+	`;
+	/*
 		<div class="content_container_time_cont noselect">
 			<div>
 				Start Time(Option) : <input class="content_container_time_input" id="time_start_date" type="date"><input class="content_container_time_input" id="time_start_time" type="time">
@@ -16,28 +19,27 @@ const AddClassOne = ()=> {
 				End Time(Option) : <input class="content_container_time_input" id="time_end_date" type="date"><input class="content_container_time_input" id="time_end_time" type="time">
 			</div>
 		</div>
-		<div id="class_submit_btn" class="class_modify_btn noselect pointer wow animated fadeInRight">Create&nbsp; <i class="fas fa-arrow-right"></i></div>
-	`;
+	*/
 
 	return view;
 }
 
 // 문제집 생성 이벤트
 const AddClassOneEvent = (lecture_id)=> {
-	let now = new Date();
-	let start_div_date = document.querySelector('#time_start_date');
-	let end_div_date = document.querySelector('#time_end_date');
-	let start_div_time = document.querySelector("#time_start_time");
-	let end_div_time = document.querySelector("#time_end_time");
-	Object.assign(start_div_date, {
-		'min': new Date(now.setFullYear(now.getFullYear()-1)).toISOString().split('T')[0],
-		'max': new Date(now.setFullYear(now.getFullYear()+2)).toISOString().split('T')[0]
-	});
-	// 마감시간 역주행을 방지한 이벤트 삽입
-	start_div_date.addEventListener('change', LimitEndDate);
-	end_div_date.addEventListener('change', LimitEndTime);
-	start_div_time.addEventListener('change', LimitEndTime);
-	end_div_time.addEventListener('change', LimitEndTime);
+	// let now = new Date();
+	// let start_div_date = document.querySelector('#time_start_date');
+	// let end_div_date = document.querySelector('#time_end_date');
+	// let start_div_time = document.querySelector("#time_start_time");
+	// let end_div_time = document.querySelector("#time_end_time");
+	// Object.assign(start_div_date, {
+	// 	'min': new Date(now.setFullYear(now.getFullYear()-1)).toISOString().split('T')[0],
+	// 	'max': new Date(now.setFullYear(now.getFullYear()+2)).toISOString().split('T')[0]
+	// });
+	// // 마감시간 역주행을 방지한 이벤트 삽입
+	// start_div_date.addEventListener('change', LimitEndDate);
+	// end_div_date.addEventListener('change', LimitEndTime);
+	// start_div_time.addEventListener('change', LimitEndTime);
+	// end_div_time.addEventListener('change', LimitEndTime);
 
 	// 제출
 	document.querySelector("#class_submit_btn").addEventListener("click", ()=> {
@@ -53,10 +55,6 @@ const AddClassOneEvent = (lecture_id)=> {
 
 // 문제집 생성 제출
 const AddClassOneSubmit = (lecture_id)=> {
-	if (!confirm("You done?")) {
-		Snackbar("Ok, keep going.");
-		return;
-	}
 	// 문제집 제목 검사
 	let title = document.querySelector("#class_title_input").value;
 	if (title == '') {
@@ -64,20 +62,20 @@ const AddClassOneSubmit = (lecture_id)=> {
 		document.querySelector("#class_title_input").focus();
 		return;
 	}
-	// 시간 설정 잘못했으면 return
-	if (!LimitEndTime()) {
-		return;
-	}
-	let start = null, end = null;
-	let start_date = document.querySelector("#time_start_date").value;
-	let end_date = document.querySelector("#time_end_date").value;
-	let start_time = document.querySelector("#time_start_time").value;
-	let end_time = document.querySelector("#time_end_time").value;
-	if (start_date != '' && end_date != '' && start_time != '' && end_time != '') {
-		start = start_date+' '+start_time+':00';
-		end = end_date+' '+end_time+":00";
-	}
-	ApiInsertClass(lecture_id, title, start, end, (data)=> {
+	// // 시간 설정 잘못했으면 return
+	// if (!LimitEndTime()) {
+	// 	return;
+	// }
+	// let start = null, end = null;
+	// let start_date = document.querySelector("#time_start_date").value;
+	// let end_date = document.querySelector("#time_end_date").value;
+	// let start_time = document.querySelector("#time_start_time").value;
+	// let end_time = document.querySelector("#time_end_time").value;
+	// if (start_date != '' && end_date != '' && start_time != '' && end_time != '') {
+	// 	start = start_date+' '+start_time+':00';
+	// 	end = end_date+' '+end_time+":00";
+	// }
+	ApiInsertClass(lecture_id, title, (data)=> {
 		router._goTo("/manager");
 		Snackbar("Class appended successful!");
 	});
@@ -244,7 +242,8 @@ const ModifyClassOneSubmit = (class_id)=> {
 
 	// 업데이트 실행
 	ApiUpdateClass(class_id, title, start_time, end_time, (data)=> {
-		console.log(data);
+		router._goTo(`/manager${location.href.split('/manager')[1]}`);
+		Snackbar("Update successful!");
 	});
 }
 

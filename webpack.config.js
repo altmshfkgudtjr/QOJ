@@ -40,6 +40,7 @@ module.exports = {
                 { from: /^\/$/, to: '/index.html' }
             ]
         },
+        
     },
     devtool: 'inline-source-map',
     mode: 'development'

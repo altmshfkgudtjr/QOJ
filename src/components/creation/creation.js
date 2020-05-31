@@ -35,6 +35,7 @@ const CreateLectureBtn = (target)=> {
 		`;
 		ApiGetAllLectures((data)=> {
 			let btn_target = document.querySelector("#create_lecture");
+			btn_target.innerHTML = "";
 			for (let lecture of data) {
 				let btn = document.createElement('div');
 				btn.classList.add(...['box', 'class_content', 'noselect', 'pointer']);
