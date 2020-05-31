@@ -12,6 +12,7 @@ const UserCont = ()=> {
 }
 
 const UserContEvent = ()=> {
+	InserAllUser();		// 모든 사용자 조회
 	document.querySelector("#creation_input_user").addEventListener("keyup", ()=> {
 		SearchUser();
 	})
@@ -29,37 +30,26 @@ const SearchUser = ()=> {
 }
 
 // 모든 사용자 조회
-const InserAllUser = (managers=[])=> {
+const InserAllUser = ()=> {
 	ApiGetAllManager((data)=> {
 		let target = document.querySelector('#user_cont');
+		target.innerHTML = ``
 		for (let user of data) {
-			if (managers.indexOf(user['user_id']) != -1) continue;
 			let box = document.createElement('div');
-			box.classList.add(...['creation_user_box', 'noselect', 'pointer']);
+			box.classList.add(...['creation_user_box']);
 			box.innerHTML = `
 				<div class="creation_user_box_set">
-					<div class="creation_user_box_title">ID</div>
+					<div class="creation_user_box_title noselect">ID</div>
 					<div class="creation_user_box_info">${user['user_id']}</div>
 				</div><div class="creation_user_box_set">
-					<div class="creation_user_box_title">Name</div>
+					<div class="creation_user_box_title noselect">Name</div>
 					<div class="creation_user_box_info">${user['user_name']}</div>
-				</div><div class="creation_user_box_set">
-					<div class="creation_user_box_title">E-mail</div>
-					<div class="creation_user_box_info">${user['user_email']}</div>
 				</div>
-				<div class="creation_user_hidden"><i class="fas fa-plus"></i></div>
 			`;
-			box.addEventListener("click", ()=> {
-				ApplyUser(user['user_id']);
-			})
+			target.append(box);
 		}
 	});
 }
 
-// 사용자 등록
-const ApplyUser = (user_id)=> {
-	console.log("등록 :", user_id);
-}
 
-
-export { UserCont, UserContEvent, InserAllUser }
+export { UserCont, UserContEvent }

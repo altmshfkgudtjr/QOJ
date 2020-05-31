@@ -422,6 +422,7 @@ a, div {
 	height: auto;
 	display: flex;
 	flex-direction: row;
+	overflow-x: auto;
 }
 .menu {
 	position: relative;
@@ -883,6 +884,7 @@ a, div {
 	top: 20px;
 	right: 20px;
 	font-size: 18px;
+	background-color: black;
 }
 .class_modify_btn:hover {
 	width: 200px;
@@ -919,6 +921,7 @@ a, div {
 	top: 70px;
 	right: 20px;
 	font-size: 18px;
+	background-color: black;
 }
 .class_delete:hover {
 	width: 200px;
@@ -1210,35 +1213,43 @@ a, div {
 	width: auto;
 	height: auto;
 	flex-grow: 1;
+	box-sizing: border-box;
+	padding: 20px;
 }
 .creation_cont_user {
 	position: relative;
 	width: 600px;
+	max-width: 50%;
 	height: auto;
 	min-height: calc(100vh - 60px);
+	max-height: calc(100vh - 60px);
 	background-color: rgba(50,50,50,.6);
 	overflow-y: scroll;
+	box-sizing: border-box;
+	padding-bottom: 100px;
 }
 .creation_title {
 	position: relative;
 	width: 100%;
 	max-width: 700px;
 	height: auto;
-	margin: 70px auto 10px auto;
+	margin: 50px auto 10px auto;
 	font-size: 30px;
 	line-height: 50px;
 	color: #888;
+	overflow: hidden;
 }
 .creation_box {
 	position: relative;
 	width: 100%;
 	max-width: 700px;
 	height: calc(100% - 200px);
+	max-height: 80vh;
 	margin: auto;
 	box-sizing: border-box;
 	padding: 20px;
 	border-radius: 10px;
-	overflow-y: auto;
+	overflow-y: scroll;
 	overflow-x: hidden;
 }
 .creation_lecture_name {
@@ -1246,17 +1257,23 @@ a, div {
 	display: block;
 	width: 100%;
 	max-width: 700px;
-	height: 40px;
-	font-size: 24px;
+	height: 60px;
+	font-size: 20px;
 	line-height: 40px;
-	box-sizing: border-box;
 	color: rgba(255,255,255,.9);
-	background-color: rgba(0,0,0,0);
+	background-color: rgba(0,0,0,.2);
 	margin: auto;
+	margin-bottom: 10px;
 	border: none;
+	box-sizing: border-box;
+	border-radius: 10px;
+	padding: 10px 20px;
 }
 .creation_lecture_name:focus {
 	outline: none;
+}
+.creation_lecture_name_black {
+	background-color: var(--qoj-background);
 }
 .creation_title_user {
 	position: relative;
@@ -1299,29 +1316,35 @@ a, div {
 .creation_user_box {
 	position: relative;
 	width: 95%;
-	height: 140px;
+	height: 50px;
 	border-radius: 10px;
 	box-sizing: border-box;
-	padding: 20px;
+	padding: 10px 20px;
 	color: rgba(255,255,255,.7);
 	font-size: 16px;
 	margin: auto;
+	margin-bottom: 10px;
 	background-color: #29292f;
 	transition: .1s var(--qoj-transition);
 }
+.creation_user_box:hover {
+	background-color: #39393f;
+	box-shadow: var(--qoj-boxshadow);
+}
 .creation_user_box_set {
 	position: relative;
-	margin-bottom: 10px;
-}
-.creation_user_box_set:nth-child(3) {
-	margin-bottom: 0;
+	height: 30px;
+	display: inline-block;
+	width: 50%;
+	box-sizing: border-box;
 }
 .creation_user_box_title {
 	position: relative;
 	display: inline-block;
-	width: 80px;
+	width: 60px;
 	font-size: 16px;
-	color: white;
+	line-height: 30px;
+	color: rgba(255,255,255,.6);
 	margin-right: 20px;
 	border-right: 2px solid rgba(255,255,255,.1);
 	white-space: nowrap;
@@ -1331,30 +1354,46 @@ a, div {
 .creation_user_box_info {
 	position: relative;
 	display: inline-block;
-	width: auto;
+	width: calc(100% - 100px);
 	font-size: 16px;
+	line-height: 30px;
 	color: rgba(255,255,255,.9);
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.creation_user_hidden {
-	position: absolute;
-	width: 200px;
-	height: 100%;
-	border-radius: 0 10px 10px 0;
-	top: 0;
-	right: 0;
-	background-color: rgba(0,0,0,.3);
-	visibility: hidden;
-	opacity: 0;
-	transition: .2s var(--qoj-transition);
-	color: var(--qoj-green);
+.creation_submanger_btn {
+	position: relative;
+	width: 100%;
+	height: 60px;
+	box-sizing: border-box;
 	text-align: center;
-	font-size: 40px;
-	line-height: 140px;
+	font-size: 30px;
+	color: var(--qoj-skyblue);
+	transition: .2s var(--qoj-transition);
+	border: 2px dashed rgba(255,255,255,.2);
+	border-radius: 10px;
+	line-height: 60px;
+	margin-bottom: 10px;
 }
-.creation_user_box:hover .creation_user_hidden {
-	visibility: visible;
-	opacity: 1;
+.creation_submanger_btn:hover {
+	border: 2px dashed rgba(255,255,255,0);
+	background-color: rgba(255,255,255,.1);
+	font-size: 40px;
+}
+.creation_btn {
+	position: relative;
+	float: right;
+	margin-left: 20px;
+	width: 120px;
+	height: 40px;
+	text-align: center;
+	font-size: 16px;
+	line-height: 40px;
+	color: var(--qoj-yellow);
+	transition: .2s var(--qoj-transition);
+}
+.creation_btn:hover {
+	padding-top: 10px;
+	background-color: rgba(255,255,255,.1);
 }

@@ -1,16 +1,19 @@
 import { router } from '../../router.js'
 import { ApiLectureList, ApiProblemsInfo, ApiLectureProblems } from '../../controller/lecture.js'
 import { ApiActivateClass, ApiActivateExam, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase } from '../../controller/manager.js'
+import { ApiGetLecture  } from '../../controller/creation.js'
 import { ProblemForm, AddProblemEvent, ModifyProblemEvent, ReturnContentForm } from './problem.js'
 import { AddClassOne, ModifyClassOne, DeleteClassOneEvent, AddClassOneEvent, ModifyClassOneEvent } from './classes.js'
 import { Snackbar } from '../snackbar.js'
+import { UserCont, UserContEvent } from '../creation/user.js'
 
 const Manager = ()=> {
 	let view = `
 		<div class="menu">
-			<div id="menu_title" class="menu_title noselect" data-name="">Loading..</div>
+			<div id="menu_title" class="menu_title noselect pointer" data-name="">Loading..</div>
 			<div id="menu"></div>
 			<div id="lecture_manage_btn" class="lecture_add_btn noselect pointer">+</div>
+			<div id="user_btn" class="sql_btn noselect pointer">User management&nbsp;&nbsp;<i class="fas fa-users"></i></div>
 		</div>
 		<div id="content" class="content_container_block">
 			<div class="manager_empty_box noselect wow animated zoomIn">Welcome to management of class!</div>
@@ -37,6 +40,15 @@ const ManagerEvent = ()=> {
 	ApiLectureList(lecture_id, (data)=> {
 		document.querySelector("#menu_title").dataset.name = data[0]['class_name'];
 		document.querySelector("#menu_title").textContent = data[0]['class_name'];
+		document.querySelector("#menu_title").addEventListener("click", ()=> {
+			// 문제 작성/수정 중 나가기
+			if (document.querySelector("#shell") != null || document.querySelector("#creation_sub") != null) {
+				if (!confirm("WARNING! What you wrote is not saved! Don't change your determine?")) {
+					return;
+				}
+			}
+			router._goTo(`/manager${location.href.split("/manager")[1]}`);
+		});
 		let target = document.querySelector("#menu");
 		target.innerHTML = "";	// 메뉴 초기화
 		for (let row of data) {
@@ -45,7 +57,7 @@ const ManagerEvent = ()=> {
 			lecture.textContent = row['pg_name'];
 			lecture.addEventListener("click", ()=> {
 				// 문제 작성/수정 중 나가기
-				if (document.querySelector("#shell") != null) {
+				if (document.querySelector("#shell") != null || document.querySelector("#creation_sub") != null) {
 					if (!confirm("WARNING! What you wrote is not saved! Don't change your determine?")) {
 						return;
 					}
@@ -59,7 +71,7 @@ const ManagerEvent = ()=> {
 	// 주차 추가 이벤트
 	document.querySelector("#lecture_manage_btn").addEventListener("click", ()=>{
 		// 문제 작성/수정 중 나가기
-		if (document.querySelector("#shell") != null) {
+		if (document.querySelector("#shell") != null || document.querySelector("#creation_sub") != null) {
 			if (!confirm("WARNING! What you wrote is not saved! Don't change your determine?")) {
 				return;
 			}
@@ -69,9 +81,11 @@ const ManagerEvent = ()=> {
 	});
 	// sql 파일 업로드 이벤트
 	document.querySelector("#sql_btn").addEventListener("click", UploadSQL);
-	document.querySelector("#sql_file").addEventListener("change", UploadSQLEvent, false);
+	document.querySelector("#sql_file").addEventListener("change", ()=> { UploadSQLEvent(lecture_id) }, false);
 	// 사용 중인 Database 조회
-	ViewDatabase();
+	ViewDatabase(lecture_id);
+	// 사용자 관리
+	document.querySelector("#user_btn").addEventListener("click", ()=> { ManagementUser(lecture_id) });
 }
 
 // 주차 관리
@@ -81,7 +95,6 @@ const ManageClass = (class_id)=> {
 	// 문제집 정보 반환
 	new Promise((resolve, reject)=> {
 		ApiProblemsInfo(class_id, (data)=> {
-			console.log(data);
 			let title_box = document.createElement("div");
 			title_box.id = 'class_title';
 			title_box.classList.add(...['content_container_title', 'noselect']);
@@ -262,7 +275,7 @@ const UploadSQL = ()=> {
 }
 
 // sql 파일 업로드 이벤트
-const UploadSQLEvent = ()=> {
+const UploadSQLEvent = (lecture_id)=> {
 	if (document.querySelector("#sql_file").files.length > 1) {
 		Snackbar("Upload only one file.");
 		return;
@@ -278,27 +291,13 @@ const UploadSQLEvent = ()=> {
 		Snackbar("The file size is too large.");
 		return;
 	}
-	let lecture_id = null;
-	if (location.href.indexOf("#cl?") == -1) {
-		router._goTo("/board");
-		return;
-	} else {
-		lecture_id = location.href.split("#cl?")[1].split("#")[0];
-	}
 	ApiInsertDatabase(lecture_id, sql, (data)=> {
 		Snackbar("SQL file applied successful!");
 	})
 }
 
 // 데이터베이스 조회
-const ViewDatabase = ()=> {
-	let lecture_id = null;
-	if (location.href.indexOf("#cl?") == -1) {
-		router._goTo("/board");
-		return;
-	} else {
-		lecture_id = location.href.split("#cl?")[1].split("#")[0];
-	}
+const ViewDatabase = (lecture_id)=> {
 	ApiGetDatabase(lecture_id, (data)=> {
 		let target = document.querySelector("#database_menu");
 		for (let db of data) {
@@ -328,6 +327,71 @@ const DropDatabase = (db_id, db_title)=> {
 	ApiDeleteDatabase(db_id, (data)=> {
 		Snackbar("Table deleted successful!");
 	});
+}
+
+// 사용자 관리
+const ManagementUser = (lecture_id)=> {
+	let target = document.querySelector('#content');
+	target.innerHTML = "";
+	target.classList.remove("content_container_block");
+	target.classList.add("content_container_flex");
+	let view = `
+		<div class="creation_cont_content">
+			<div class="creation_title noselect">
+				Member
+				<div id="creation_submit" class="creation_btn pointer">update&nbsp; <i class="fas fa-arrow-right"></i></div>
+			</div>
+			<div id="creation_sub">
+				<input class="creation_lecture_name creation_lecture_name_black" type="text" placeholder="ID / Student Number" spellcheck="false">
+			</div>
+			<div id="creation_submanger_btn" class="creation_submanger_btn noselect pointer">+</div>
+		</div>
+		<div class="creation_cont_user">${UserCont()}</div>
+	`;
+	target.innerHTML = view;
+	UserContEvent();	// 모든 사용자 조회
+	DisplayMemeber(lecture_id);	// 현재 분반 사용자 조회
+	// 사용자 추가
+	document.querySelector("#creation_submanger_btn").addEventListener("click", AppendMember);
+}
+
+// 분반 사용자 조회
+const DisplayMemeber = (lecture_id)=> {
+	ApiGetLecture(lecture_id, (data)=> {
+		console.log(data);
+		document.querySelector("#creation_sub").innerHTML = "";
+		for (let member of data['member']) {
+			let box = document.createElement('input');
+			box.classList.add(...['creation_lecture_name', 'creation_lecture_name_black']);
+			Object.assign(box, {
+				'type': 'text',
+				'placeholder': 'ID / Student Number',
+				'spellcheck': 'false'
+			});
+			box.value = member['id'];
+			document.querySelector("#creation_sub").append(box);
+		}
+	});
+}
+
+// 사용자 추가 Event
+const AppendMember = ()=> {
+	// 아직 빈 input 값이 있으면 생성안함
+	for (let node of document.querySelectorAll(".creation_lecture_name")) {
+		if (node.value == '') {
+			node.focus();
+			Snackbar("Input empty box first.");
+			return;
+		}
+	}
+	let member = document.createElement('input');
+	member.classList.add(...["creation_lecture_name", "creation_lecture_name_black"]);
+	Object.assign(member, {
+		'type': 'text',
+		'placeholder': 'ID / Student Number',
+		'spellcheck': 'false'
+	});
+	document.querySelector("#creation_sub").append(member);
 }
 
 
