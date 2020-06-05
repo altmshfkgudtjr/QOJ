@@ -316,8 +316,8 @@ const ApiUpdateLectureMember = (lecture_id, members, callback)=> {
 	});
 }
 
-// 분반 모든 Memberd에 대한 점수 정보 API
-const ApiUserClassScore = (class_id, callback)=> {
+// 분반 모든 Member에 대한 점수 정보 API
+const ApiClassScores = (class_id, callback)=> {
 	callback([
 		{
 			'problem_id': 1,
@@ -349,7 +349,7 @@ const ApiUserClassScore = (class_id, callback)=> {
 		}
 	]);
 	return;
-	let sendData = {'id': class_id};
+	let sendData = {'pg_id': class_id};
 	LoadingOn();
 	FETCH('/API/V1/class/score', 'POST', sendData, (data)=> {
 		LoadingOff();
@@ -369,6 +369,35 @@ const ApiUserClassScore = (class_id, callback)=> {
 	});
 }
 
+// 분반 특정 Member의 특정 문제에 대한 Code와 정보 API
+const ApiUserCodeInfo = (problem_id, class_id, callback)=> {
+	callback({
+		'p_id': 1,
+		'p_title': "학생을 찾아라!",
+		'up_query': "SELECT * FROM practice WHERE major='컴퓨터공학과'",
+		'p_content': "practice 테이블은 세종대학교 학생 정보를 담은 테이블입니다. test 테이블로부터 컴퓨터공학과 학생들만 조회하려고 할 때, 쿼리문을 작성해주세요."
+	});
+	return;
+	let sendData = {'p_id': problem_id, 'pg_id': class_id};
+	LoadingOn();
+	FETCH('/API/V1/user/problem', 'POST', sendData, (data)=> {
+		LoadingOff();
+		if (data.API_STATUS == 'success') {
+			if (typeof(callback) == 'function') {
+				callback(data.RESULT);
+			} else {
+				Snackbar("Wrong Data");
+			}
+		} else if (data.API_STATUS == 'fail') {
+			console.log(data);
+			Snackbar("The connection attempt failed");
+		} else {
+			console.log('failed');
+			Snackbar("Request failed");
+		}
+	});
+}
+
 export { ApiManagerClasses, ApiActivateClass, ApiActivateExam, ApiInsertClass, ApiUpdateClass, ApiDeleteClass,
  ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase, ApiUpdateLectureMember,
- ApiUserClassScore, ApiViewProblem }
+ ApiClassScores, ApiViewProblem, ApiUserCodeInfo }

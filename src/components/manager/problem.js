@@ -2,7 +2,7 @@ import { router } from '../../router.js'
 import { Snackbar } from '../snackbar.js'
 import { Problem, ProblemEvent, ChangeCodeLine } from '../lecture/problem.js'
 import { ApiProblem, ApiRunProblem } from '../../controller/lecture.js'
-import { ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem, ApiViewProblem } from '../../controller/manager.js'
+import { ApiInsertProblem, ApiMoifyProblem, ApiDeleteProblem, ApiViewProblem } from '../../controller/manager.js'
 
 const ProblemForm = ()=> {
 	let view = `

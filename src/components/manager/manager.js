@@ -3,7 +3,7 @@ import { ApiLectureInfo, ApiLectureList, ApiProblemsInfo, ApiLectureProblems } f
 import { ApiActivateClass, ApiActivateExam, ApiInsertDatabase, ApiGetDatabase, ApiDeleteDatabase, ApiUpdateLectureMember } from '../../controller/manager.js'
 import { ApiGetLecture  } from '../../controller/creation.js'
 import { ProblemForm, AddProblemEvent, ModifyProblemEvent, ReturnContentForm } from './problem.js'
-import { AddClassOne, ModifyClassOne, DeleteClassOneEvent, AddClassOneEvent, ModifyClassOneEvent } from './classes.js'
+import { AddClassOne, ModifyClassOne, DeleteClassOneEvent, AddClassOneEvent, ModifyClassOneEvent, ContentUrlCheck } from './classes.js'
 import { Snackbar } from '../snackbar.js'
 import { UserCont, UserContEvent } from '../creation/user.js'
 import { StatusEvent } from './status.js'
@@ -67,6 +67,10 @@ const ManagerEvent = ()=> {
 				}
 				ReturnContentForm();
 				ManageClass(row['pg_id']);
+				if (location.href.split('manager')[1] != undefined &&
+					!location.href.split('manager')[1].startsWith(`#cl?${lecture_id}#cn?${row['pg_id']}`)) {
+					history.pushState(null,null,`manager#cl?${lecture_id}#cn?${row['pg_id']}`);
+				}
 			});
 			target.append(lecture);
 		}
@@ -89,6 +93,8 @@ const ManagerEvent = ()=> {
 	ViewDatabase(lecture_id);
 	// 사용자 관리
 	document.querySelector("#user_btn").addEventListener("click", ()=> { ManagementUser(lecture_id) });
+	// 분반 관리 URL Check
+	ContentUrlCheck();
 }
 
 // 주차 관리
@@ -425,4 +431,4 @@ const UpdateMemeber = (lecture_id)=> {
 }
 
 
-export { Manager, ManagerEvent, ModifyClassEventBinding }
+export { Manager, ManagerEvent, ModifyClassEventBinding, ManageClass }

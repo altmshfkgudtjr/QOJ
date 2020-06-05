@@ -1,5 +1,6 @@
 import { ApiProblemsInfo } from '../../controller/lecture.js'
-import { ApiUserClassScore } from '../../controller/manager.js'
+import { ApiClassScores, ApiUserCodeInfo } from '../../controller/manager.js'
+import { ReturnContentForm } from './problem.js'
 
 const Status = ()=> {
 	let view = `
@@ -18,6 +19,13 @@ const Status = ()=> {
 }
 
 const StatusEvent = (class_id)=> {
+	// 통계 URL history 추가
+	if (location.href.indexOf('#status') == -1) {
+		let lecture_id = location.href.split("#cl?")[1];
+		if (lecture_id.indexOf('#') != -1) lecture_id = lecture_id.split('#')[0];
+		history.pushState(null,null,`manager#cl?${lecture_id}#cn?${class_id}#status`);
+	}
+
 	let target = document.querySelector("#content");
 	target.innerHTML = Status();
 
@@ -47,7 +55,8 @@ const StatusEvent = (class_id)=> {
 
 // 해당 분반 Memeber 점수 반환
 const UserClassStatus = (class_id)=> {
-	ApiUserClassScore(class_id, (data)=> {
+	ApiClassScores(class_id, (data)=> {
+		console.log(data);
 		let target = document.querySelector("#score_container");
 		target.innerHTML = "";
 		// Info Box
@@ -89,13 +98,15 @@ const UserClassStatus = (class_id)=> {
 		for (let user of data.filter(user => user.user_name == '홍길동')) {
 			content = document.createElement('div');
 			content.classList.add('content_score_info');
-			if (user['up_state'] == 1) {
+			if (user['up_state'] == 1) {																// 사용자가 문제를 맞췄을 때,
 				content.classList.add(...['content_score_info_green', 'pointer']);
 				content.textContent = "Accept";
-			} else if (user['up_state'] == 0) {
+				content.addEventListener("click", ()=> { ViewUserCode(user['problem_id'], class_id) });
+			} else if (user['up_state'] == 0) {															// 사용자가 문제를 틀렸을 때,
 				content.classList.add(...['content_score_info_red', 'pointer']);
 				content.textContent = "Fail";
-			} else {
+				content.addEventListener("click", ()=> { ViewUserCode(user['problem_id'], class_id) });
+			} else {																					// 사용자가 문제를 안 풀었을 때,
 				content.classList.add('content_score_info_none');
 				content.textContent = "-"
 			}
@@ -103,6 +114,7 @@ const UserClassStatus = (class_id)=> {
 		}
 		target.append(wrap);
 
+		// 이부분 원빈꺼니까 지우셈
 		wrap = document.createElement('div');
 		wrap.classList.add('content_score_wrap');
 		// ID
@@ -118,13 +130,15 @@ const UserClassStatus = (class_id)=> {
 		for (let user of data.filter(user => user.user_name == '원빈')) {
 			content = document.createElement('div');
 			content.classList.add('content_score_info');
-			if (user['up_state'] == 1) {
+			if (user['up_state'] == 1) {																// 사용자가 문제를 맞췄을 때,
 				content.classList.add(...['content_score_info_green', 'pointer']);
 				content.textContent = "Accept";
-			} else if (user['up_state'] == 0) {
+				content.addEventListener("click", ()=> { ViewUserCode(user['problem_id'], class_id) });
+			} else if (user['up_state'] == 0) {															// 사용자가 문제를 틀렸을 때,
 				content.classList.add(...['content_score_info_red', 'pointer']);
 				content.textContent = "Fail";
-			} else {
+				content.addEventListener("click", ()=> { ViewUserCode(user['problem_id'], class_id) });
+			} else {																					// 사용자가 문제를 안 풀었을 때,
 				content.classList.add('content_score_info_none');
 				content.textContent = "-"
 			}
@@ -134,8 +148,24 @@ const UserClassStatus = (class_id)=> {
 	});
 }
 
-const ViewUserCode = ()=> {
+// 학생 Accpt/Fail을 클릭했을 시, 학생 Code Viewer 표시
+const ViewUserCode = (problem_id, class_id)=> {
+	ApiUserCodeInfo(problem_id, class_id, (data)=> {
+		console.log(data);
 
+	});
 }
 
-export { Status, StatusEvent }
+// 분반 통계 URL Check
+const StatusUrlCheck = ()=> {
+	if (location.href.split("#status")[1] == undefined) {
+		return;
+	} else {
+		let class_id = location.href.split("#cn?")[1];
+		if (class_id.indexOf('#') != -1) class_id = class_id.split('#')[0];
+		ReturnContentForm();
+		StatusEvent(class_id);
+	}
+}
+
+export { Status, StatusEvent, StatusUrlCheck }

@@ -1,7 +1,9 @@
-import { ModifyClassEventBinding } from './manager.js'
+import { ModifyClassEventBinding, ManageClass } from './manager.js'
 import { Snackbar } from '../snackbar.js'
 import { ApiInsertClass, ApiUpdateClass, ApiDeleteClass } from '../../controller/manager.js'
 import { router } from '../../router.js'
+import { ReturnContentForm } from './problem.js'
+import { StatusUrlCheck } from './status.js'
 
 const AddClassOne = ()=> {
 	let view = `
@@ -282,4 +284,21 @@ const LimitEndTime = ()=> {
 	return true;
 }
 
-export { AddClassOne, AddClassOneEvent, ModifyClassOneEvent, DeleteClassOneEvent }
+// 분반 관리 URL Check
+const ContentUrlCheck = ()=> {
+	if (location.href.split("#cn?")[1] == undefined) {
+		return;
+	} else {
+		let class_id = location.href.split("#cn?")[1];
+		if (class_id.indexOf('#') != -1) class_id = class_id.split('#')[0];
+		// 이부분 살짝 legacy...
+		if (location.href.indexOf('#status') != -1) {
+			StatusUrlCheck();
+		} else {
+			ReturnContentForm();
+			ManageClass(class_id);
+		}
+	}
+}
+
+export { AddClassOne, AddClassOneEvent, ModifyClassOneEvent, DeleteClassOneEvent, ContentUrlCheck }

@@ -114,7 +114,7 @@ const ContentUrlCheck = ()=> {
 		return;
 	} else {
 		let class_id = location.href.split("#cn?")[1];
-		if (class_id.indexOf('#') != -1) class_id = location.href.split("#cn?")[1].split('#')[0];
+		if (class_id.indexOf('#') != -1) class_id = class_id.split('#')[0];
 		ContentEvent(class_id);
 	}
 }
