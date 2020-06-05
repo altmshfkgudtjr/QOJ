@@ -519,6 +519,7 @@ a, div {
 	position: relative;
 	flex-grow: 1;
 	width: auto;
+	max-width: calc(100% - 600px);
 	height: auto;
 	box-sizing: border-box;
 	padding: 20px;
@@ -1329,24 +1330,25 @@ a, div {
 .content_score_info_wrap {
 	position: relative;
 	display: flex;
-	width: 100%;
+	width: auto;
 	height: auto;
 	line-height: 30px;
 	margin-bottom: 10px;
 	padding: 5px 0;
 	text-align: center;
 	color: var(--qoj-skyblue);
+	flex-shrink: 0;
 }
 .content_score_wrap {
 	position: relative;
 	display: flex;
-	width: 100%;
+	width: auto;
 	height: 60px;
 	line-height: 60px;
 	margin-bottom: 10px;
 	text-align: center;
 	color: white;
-	flex-wrap: wrap;
+	flex-shrink: 0;
 }
 .content_score_info {
 	position: relative;

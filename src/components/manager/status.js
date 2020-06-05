@@ -152,7 +152,7 @@ const UserClassStatus = (class_id)=> {
 const ViewUserCode = (problem_id, class_id)=> {
 	ApiUserCodeInfo(problem_id, class_id, (data)=> {
 		console.log(data);
-
+		
 	});
 }
 

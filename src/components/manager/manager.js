@@ -51,6 +51,9 @@ const ManagerEvent = ()=> {
 				}
 				router._goTo(`/manager${location.href.split("/manager")[1]}`);
 			});
+
+			// 분반 관리 URL Check -> lecture title 을 얻기위해서 logic 변경
+			ContentUrlCheck();
 		});
 		let target = document.querySelector("#menu");
 		target.innerHTML = "";	// 메뉴 초기화
@@ -93,8 +96,6 @@ const ManagerEvent = ()=> {
 	ViewDatabase(lecture_id);
 	// 사용자 관리
 	document.querySelector("#user_btn").addEventListener("click", ()=> { ManagementUser(lecture_id) });
-	// 분반 관리 URL Check
-	ContentUrlCheck();
 }
 
 // 주차 관리
