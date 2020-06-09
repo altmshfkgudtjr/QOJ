@@ -33,7 +33,7 @@ module.exports = {
         contentBase: [__dirname, path.join(__dirname, '/dist/')],
         inline: true,
         hot: true,
-        host: "localhost",
+        host: "0.0.0.0",
         port: 8000,
         historyApiFallback: {
              rewrites: [

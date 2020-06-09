@@ -53,7 +53,7 @@ const ContentEvent = (class_id)=> {
 					if (data == true) {
 						ShowProblems(class_id);
 					} else {
-						Snackbar("Not yet time for the test. Please try again later.");
+						Snackbar("It is currently not a test time!");
 						return;
 					}
 				});

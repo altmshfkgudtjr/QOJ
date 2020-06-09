@@ -2,6 +2,7 @@ import { ApiProblemsInfo } from '../../controller/lecture.js'
 import { ApiClassScores, ApiUserCodeInfo } from '../../controller/manager.js'
 import { ReturnContentForm } from './problem.js'
 import { CodeViewEvent } from './codeview.js'
+import { router } from '../../router.js'
 
 const Status = ()=> {
 	let view = `
@@ -56,8 +57,13 @@ const StatusEvent = (class_id)=> {
 
 // 해당 분반 Memeber 점수 반환
 const UserClassStatus = (class_id)=> {
-	ApiClassScores(class_id, (data)=> {
-		console.log(data);
+	let lecture_id = location.href.split("#cl?")[1];
+	if (lecture_id == undefined) {
+		router._goTo('/board');
+		return;
+	}
+	if (lecture_id.indexOf('#') != -1) lecture_id = lecture_id.split('#')[0];
+	ApiClassScores(lecture_id, class_id, (data)=> {
 		let target = document.querySelector("#score_container");
 		target.innerHTML = "";
 		// Info Box
@@ -73,7 +79,7 @@ const UserClassStatus = (class_id)=> {
 		info.classList.add(...['content_score_info', 'content_score_info_static']);
 		info.textContent = "Name";
 		info_box.append(info);
-		let infoes = data.map(node=> node.problem_name);
+		let infoes = data.map(node=> node.p_title);
 		infoes = [...new Set(infoes)];
 		for (let problem of infoes) {
 			info = document.createElement('div');
@@ -84,74 +90,49 @@ const UserClassStatus = (class_id)=> {
 		target.append(info_box);
 
 		// 사용자 출력================================================
-		let wrap = document.createElement('div');
-		wrap.classList.add('content_score_wrap');
-		// ID
-		let content = document.createElement('div');
-		content.classList.add('content_score_info');
-		content.textContent = data[0]['user_id'];
-		wrap.append(content);
-		// Name
-		content = document.createElement('div');
-		content.classList.add(...['content_score_info', 'content_score_info_static']);
-		content.textContent = data[0]['user_name'];
-		wrap.append(content);
-		for (let user of data.filter(user => user.user_name == '홍길동')) {
-			content = document.createElement('div');
-			content.classList.add('content_score_info');
-			if (user['up_state'] == 1) {																// 사용자가 문제를 맞췄을 때,
-				content.classList.add(...['content_score_info_green', 'pointer']);
-				content.textContent = "Accept";
-				content.addEventListener("click", ()=> { ViewUserCode(user['problem_id'], class_id) });
-			} else if (user['up_state'] == 0) {															// 사용자가 문제를 틀렸을 때,
-				content.classList.add(...['content_score_info_red', 'pointer']);
-				content.textContent = "Fail";
-				content.addEventListener("click", ()=> { ViewUserCode(user['problem_id'], class_id) });
-			} else {																					// 사용자가 문제를 안 풀었을 때,
-				content.classList.add('content_score_info_none');
-				content.textContent = "-"
-			}
-			wrap.append(content);
-		}
-		target.append(wrap);
+		while (data.length != 0) {
+			let target_id = data[0]['user_id'];
+			let target_data = data.filter(user => user.user_id == target_id);
 
-		// 이부분 원빈꺼니까 지우셈
-		wrap = document.createElement('div');
-		wrap.classList.add('content_score_wrap');
-		// ID
-		content = document.createElement('div');
-		content.classList.add('content_score_info');
-		content.textContent = data[1]['user_id'];
-		wrap.append(content);
-		// Name
-		content = document.createElement('div');
-		content.classList.add(...['content_score_info', 'content_score_info_static']);
-		content.textContent = data[1]['user_name'];
-		wrap.append(content);
-		for (let user of data.filter(user => user.user_name == '원빈')) {
-			content = document.createElement('div');
+			let wrap = document.createElement('div');
+			wrap.classList.add('content_score_wrap');
+			// ID
+			let content = document.createElement('div');
 			content.classList.add('content_score_info');
-			if (user['up_state'] == 1) {																// 사용자가 문제를 맞췄을 때,
-				content.classList.add(...['content_score_info_green', 'pointer']);
-				content.textContent = "Accept";
-				content.addEventListener("click", ()=> { ViewUserCode(user['problem_id'], class_id) });
-			} else if (user['up_state'] == 0) {															// 사용자가 문제를 틀렸을 때,
-				content.classList.add(...['content_score_info_red', 'pointer']);
-				content.textContent = "Fail";
-				content.addEventListener("click", ()=> { ViewUserCode(user['problem_id'], class_id) });
-			} else {																					// 사용자가 문제를 안 풀었을 때,
-				content.classList.add('content_score_info_none');
-				content.textContent = "-"
-			}
+			content.textContent = target_data[0]['user_id'];
 			wrap.append(content);
+			// Name
+			content = document.createElement('div');
+			content.classList.add(...['content_score_info', 'content_score_info_static']);
+			content.textContent = target_data[0]['user_name'];
+			wrap.append(content);			
+
+			for (let user of target_data) {
+				content = document.createElement('div');
+				content.classList.add('content_score_info');
+				if (user['up_state'] == 1) {																// 사용자가 문제를 맞췄을 때,
+					content.classList.add(...['content_score_info_green', 'pointer']);
+					content.textContent = "Accept";
+					content.addEventListener("click", ()=> { ViewUserCode(user['up_id'], class_id) });
+				} else if (user['up_state'] == 0) {															// 사용자가 문제를 틀렸을 때,
+					content.classList.add(...['content_score_info_red', 'pointer']);
+					content.textContent = "Fail";
+					content.addEventListener("click", ()=> { ViewUserCode(user['up_id'], class_id) });
+				} else {																					// 사용자가 문제를 안 풀었을 때,
+					content.classList.add('content_score_info_none');
+					content.textContent = "-"
+				}
+				wrap.append(content);
+			}
+			target.append(wrap);
+			data = data.filter(user => user.user_id != target_id);
 		}
-		target.append(wrap);
 	});
 }
 
 // 학생 Accpt/Fail을 클릭했을 시, 학생 Code Viewer 표시
-const ViewUserCode = (problem_id, class_id)=> {
-	ApiUserCodeInfo(problem_id, class_id, (data)=> {
+const ViewUserCode = (user_problem_id)=> {
+	ApiUserCodeInfo(user_problem_id, (data)=> {
 		history.pushState(null,null, location.href.split("/")[3]);
 		CodeViewEvent(data);
 	});

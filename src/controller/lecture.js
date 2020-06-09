@@ -158,11 +158,9 @@ const ApiSubmitProblem = (lecture_id, problem_id, query, callback)=> {
 
 // 시험시간 Check API
 const ApiCheckExamEnter = (class_id, callback)=> {
-	callback(true);
-	return;
-	let sendData = {'id': class_id};
+	let sendData = {'pg_id': class_id};
 	LoadingOn();
-	FETCH('/API/V1/problem/submit', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/check_exam', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {

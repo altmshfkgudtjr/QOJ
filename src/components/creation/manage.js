@@ -7,13 +7,14 @@ import { LoadingOn, LoadingOff } from '../loading.js'
 const ManageLecture = ()=> {
 	let view = `
 		<div class="creation_title noselect">
-			분반 생성
+			<span id="creation_title">분반 생성</span>
 			<div id="creation_submit" class="creation_btn pointer">submit&nbsp; <i class="fas fa-arrow-right"></i></div>
 			<div id="creation_cancel" class="creation_btn pointer">delete&nbsp; <i class="fas fa-times"></i></div>
 		</div>
 		<div class="box creation_box noselect">
 			<input id="lecture_name" class="creation_lecture_name" type="text" placeholder="Please enter the lecture name." spellcheck="false">
 			<div class="creation_title noselect">담당 교수</div>
+			<div id="hidden_master" class="display_none"></div>
 			<input id="main_manager" class="creation_lecture_name" type="text" placeholder="Professor ID" spellcheck="false">
 			<div class="creation_title noselect">분반 관리자</div>
 			<div id="creation_sub">
@@ -48,6 +49,7 @@ const ManageLectureEvent = (lecture_id = '')=> {
 				[...document.querySelectorAll("#creation_sub .creation_lecture_name")].reverse()[0].focus();
 			}
 		});
+		document.querySelector("#creation_title").textContent = '분반 수정';
 		document.querySelector("#creation_submit").innerHTML = `modify&nbsp; <i class="fas fa-arrow-right"></i>`;
 		document.querySelector("#creation_submit").addEventListener("click", ()=> {
 			CreateCreation(lecture_id);
@@ -101,6 +103,7 @@ const CreateCreation = (lecture_id='')=> {
 	let main_manager = document.querySelector("#main_manager").value;
 	let sub_managers = [...document.querySelectorAll("#creation_sub .creation_lecture_name")].map(submanager => submanager.value);
 	sub_managers = sub_managers.filter(submanager => submanager.length > 0);
+	console.log(sub_managers);
 	if (title == '') {
 		Snackbar("Check the lecture name.");
 		document.querySelector("#lecture_name").focus();
@@ -130,7 +133,7 @@ const CreateCreation = (lecture_id='')=> {
 			router._goTo("/board");
 			Snackbar("Lecture created successful!");
 		});
-	} else {			// 수정
+	} else {				// 수정
 		ApiUpdateLecture(lecture_id, title, main_manager, sub_managers, (data)=> {
 			router._goTo("/board");
 			Snackbar("Lecture updated successful!");

@@ -315,43 +315,11 @@ const ApiUpdateLectureMember = (lecture_id, members, callback)=> {
 		}
 	});
 }
-
 // 분반 모든 Member에 대한 점수 정보 API
-const ApiClassScores = (class_id, callback)=> {
-	callback([
-		{
-			'problem_id': 1,
-			'problem_name': '학생을 찾아라!',
-			'user_id': '12001200',
-			'user_name': '홍길동',
-			'up_state': 1,
-		},
-		{
-			'problem_id': 1,
-			'problem_name': '학생을 찾아라!',
-			'user_id': '16450202',
-			'user_name': '원빈',
-			'up_state': 0,
-		},
-		{
-			'problem_id': 2,
-			'problem_name': '학생을 찾아라!-2',
-			'user_id': '12001200',
-			'user_name': '홍길동',
-			'up_state': 1,
-		},
-		{
-			'problem_id': 2,
-			'problem_name': '학생을 찾아라!-2',
-			'user_id': '16450202',
-			'user_name': '원빈',
-			'up_state': null,
-		}
-	]);
-	return;
-	let sendData = {'pg_id': class_id};
+const ApiClassScores = (lecture_id, class_id, callback)=> {
+	let sendData = {'class_id': lecture_id, 'pg_id': class_id};
 	LoadingOn();
-	FETCH('/API/V1/class/score', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/get_total_score', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
@@ -370,15 +338,10 @@ const ApiClassScores = (class_id, callback)=> {
 }
 
 // 분반 특정 Member의 특정 문제에 대한 Code와 정보 API
-const ApiUserCodeInfo = (problem_id, class_id, callback)=> {
-	callback({
-		'p_id': 1,
-		'up_query': "SELECT * FROM practice WHERE major='컴퓨터공학과'"
-	});
-	return;
-	let sendData = {'p_id': problem_id, 'pg_id': class_id};
+const ApiUserCodeInfo = (user_problem_id, callback)=> {
+	let sendData = {'up_id': user_problem_id};
 	LoadingOn();
-	FETCH('/API/V1/user/problem', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/get_up_id', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {
