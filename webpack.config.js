@@ -39,7 +39,7 @@ module.exports = {
              rewrites: [
                 { from: /^\/$/, to: '/index.html' }
             ]
-        }
+        },
     },
     mode: 'production'
 };
