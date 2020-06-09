@@ -94,7 +94,7 @@ const ApiLectureProblems = (class_id, callback)=> {
 const ApiProblem = (problem_id, callback)=> {
 	let sendData = {'p_id': problem_id};
 	LoadingOn();
-	FETCH('/API/V1/problem_manage/get_myproblem', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/get_problem', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {

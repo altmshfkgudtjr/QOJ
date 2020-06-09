@@ -1,6 +1,7 @@
 import { ApiProblemsInfo } from '../../controller/lecture.js'
 import { ApiClassScores, ApiUserCodeInfo } from '../../controller/manager.js'
 import { ReturnContentForm } from './problem.js'
+import { CodeViewEvent } from './codeview.js'
 
 const Status = ()=> {
 	let view = `
@@ -151,8 +152,8 @@ const UserClassStatus = (class_id)=> {
 // 학생 Accpt/Fail을 클릭했을 시, 학생 Code Viewer 표시
 const ViewUserCode = (problem_id, class_id)=> {
 	ApiUserCodeInfo(problem_id, class_id, (data)=> {
-		console.log(data);
-		
+		history.pushState(null,null, location.href.split("/")[3]);
+		CodeViewEvent(data);
 	});
 }
 

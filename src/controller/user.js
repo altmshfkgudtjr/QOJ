@@ -141,7 +141,7 @@ const ApiUserClasses = (callback)=> {
 // 사용자 푼 문제 반환 API
 const ApiUserProblems = (callback)=> {
 	LoadingOn();
-	FETCH('/API/V1/auth/get_myproblem', 'GET', null, (data)=> {
+	FETCH('/API/V1/problem_manage/get_myproblem', 'GET', null, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {

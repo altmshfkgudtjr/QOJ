@@ -519,6 +519,15 @@ a, div {
 	position: relative;
 	flex-grow: 1;
 	width: auto;
+	max-width: calc(100% - 300px);
+	height: auto;
+	box-sizing: border-box;
+	padding: 20px;
+}
+.content_container_block_manage {
+	position: relative;
+	flex-grow: 1;
+	width: auto;
 	max-width: calc(100% - 600px);
 	height: auto;
 	box-sizing: border-box;
@@ -557,7 +566,7 @@ a, div {
 	flex-flow: row wrap;
 	flex-direction: row;
 	width: 100%;
-	min-width: 800px;
+	min-width: 1000px;
 	height: auto;
 	margin: 20px 0;
 }
@@ -1396,6 +1405,26 @@ table {
 th, td {
 	border: 1px solid rgba(255,255,255,.6);
 	padding: 5px;
+}
+.codeview_cont {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	flex-direction: column;
+	box-sizing: border-box;
+	background-color: #2A2A2C;
+}
+.codeview_shell {
+	position: relative;
+	height: auto;
+	min-height: 30px;
+	padding: 20px 0 20px 10px;
+	margin-left: 50px;
+	color: white;
+	font-size: 18px;
+	line-height: 24px;
+	white-space: nowrap;
+	cursor: text;
 }
 
 

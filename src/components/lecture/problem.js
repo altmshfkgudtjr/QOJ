@@ -207,4 +207,4 @@ function OnPaste_StripFormatting(elem, e) {
 }
 
 
-export { Problem, ProblemEvent, ChangeCodeLine }
+export { Problem, ProblemEvent, ChangeCodeLine, RunQuery }

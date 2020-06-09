@@ -373,10 +373,7 @@ const ApiClassScores = (class_id, callback)=> {
 const ApiUserCodeInfo = (problem_id, class_id, callback)=> {
 	callback({
 		'p_id': 1,
-		'p_title': "학생을 찾아라!",
-		'up_query': "SELECT * FROM practice WHERE major='컴퓨터공학과'",
-		'p_content': "practice 테이블은 세종대학교 학생 정보를 담은 테이블입니다. test 테이블로부터 컴퓨터공학과 학생들만 조회하려고 할 때, 쿼리문을 작성해주세요.",
-		'p_answer': "SELECT * FROM practice WHERE major='컴퓨터공학과'"
+		'up_query': "SELECT * FROM practice WHERE major='컴퓨터공학과'"
 	});
 	return;
 	let sendData = {'p_id': problem_id, 'pg_id': class_id};

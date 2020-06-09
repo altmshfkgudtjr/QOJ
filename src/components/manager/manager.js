@@ -49,7 +49,7 @@ const ManagerEvent = ()=> {
 						return;
 					}
 				}
-				router._goTo(`/manager${location.href.split("/manager")[1]}`);
+				router._goTo(`/manager#${location.href.split("/manager#")[1].split("#")[0]}`);
 			});
 
 			// 분반 관리 URL Check -> lecture title 을 얻기위해서 logic 변경
