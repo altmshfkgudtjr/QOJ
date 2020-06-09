@@ -76,8 +76,9 @@ const FETCH_FILE = (URL, METHOD, DATA, callback) => {
 	})
 	.then((res)=> {
 		if (res.status == 401) {
-			alert("Permission denied");
-			location.href = "/";
+			sessionStorage.removeItem('tk');
+			router._goTo("/");
+			Snackbar("Permission denied");
 		}
 		return res;
 	})
