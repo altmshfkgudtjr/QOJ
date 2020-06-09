@@ -1,4 +1,5 @@
 import { Snackbar } from './components/snackbar.js'
+import { router } from './router.js'
 
 const FETCH = (URL, METHOD, DATA, callback) => {
 	let token = sessionStorage.getItem('tk');
@@ -15,8 +16,9 @@ const FETCH = (URL, METHOD, DATA, callback) => {
 		})
 		.then((res)=> {
 			if (res.status == 401) {
-				alert("Permission denied");
-				location.href = "/";
+				sessionStorage.removeItem('tk');
+				router._goTo("/");
+				Snackbar("Permission denied");
 			}
 			return res;
 		})
@@ -40,8 +42,9 @@ const FETCH = (URL, METHOD, DATA, callback) => {
 		})
 		.then((res)=> {
 			if (res.status == 401) {
-				alert("Permission denied");
-				location.href = "/";
+				sessionStorage.removeItem('tk');
+				router._goTo("/");
+				Snackbar("Permission denied");
 			}
 			return res;
 		})
