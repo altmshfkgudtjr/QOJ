@@ -2,21 +2,21 @@ import { Snackbar } from './components/snackbar.js'
 import { router } from './router.js'
 
 const FETCH = (URL, METHOD, DATA, callback) => {
-	let token = localStorage.getItem('tk');
+	let token = sessionStorage.getItem('tk');
 	let authorization;
     if (token != null && token != undefined && token != 'undefined') {
-        authorization = {'Authorization': "Bearer " + token};
+        authorization = {'Authorization': "Bearer " + token.trim()};
     } else {
     	authorization = {};
     }
 	if (METHOD == "GET") {
 		fetch(URL, {
-			header : authorization,
+			headers : authorization,
 			method: METHOD
 		})
 		.then((res)=> {
 			if (res.status == 401) {
-				localStorage.removeItem('tk');
+				sessionStorage.removeItem('tk');
 				router._goTo("/");
 				Snackbar("Permission denied");
 			}
@@ -42,7 +42,7 @@ const FETCH = (URL, METHOD, DATA, callback) => {
 		})
 		.then((res)=> {
 			if (res.status == 401) {
-				localStorage.removeItem('tk');
+				sessionStorage.removeItem('tk');
 				router._goTo("/");
 				Snackbar("Permission denied");
 			}
@@ -76,7 +76,7 @@ const FETCH_FILE = (URL, METHOD, DATA, callback) => {
 	})
 	.then((res)=> {
 		if (res.status == 401) {
-			localStorage.removeItem('tk');
+			sessionStorage.removeItem('tk');
 			router._goTo("/");
 			Snackbar("Permission denied");
 		}

@@ -40,6 +40,12 @@ module.exports = {
                 { from: /^\/$/, to: '/index.html' }
             ]
         },
+        proxy: {
+            '/API': {
+                target: "http://localhost:5000",
+                changeOrigin: false,
+            }
+        }
     },
-    mode: 'production'
+    mode: 'development',
 };

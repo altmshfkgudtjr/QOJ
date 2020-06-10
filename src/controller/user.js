@@ -4,7 +4,6 @@ import { LoadingOn, LoadingOff } from '../components/loading.js'
 
 // 로그인 API
 const ApiUserLogin = (id, pw, callback)=> {
-	sessionStorage.removeItem('tk');
 	let sendData = {'id': id, 'pw': pw};
 	LoadingOn();
 	FETCH('/API/V1/auth/sign_in', 'POST', sendData, (data)=> {
