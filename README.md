@@ -1,4 +1,4 @@
-![QOJ LOGO](.\dist\static\images\info1.png)
+![QOJ LOGO](./dist/static/images/info1.png)
 
 # Q O J
 
@@ -6,7 +6,7 @@
 
 ---
 
-![QOJ Overview](.\dist\static\images\info2.png)
+![QOJ Overview](./dist/static/images/info2.png)
 
 ---
 
