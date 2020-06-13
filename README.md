@@ -27,6 +27,24 @@
 
 
 ## How to run this app? 🚀
+#### Using Only Node JS
+1. Donwload packages by npm
+   ```shell
+   npm install
+   ```
+2. Run devserver using webpack
+   ```shell
+   npm run devserver
+   ```
+3. If you want to build source?
+   ```shell
+   npm run build
+   npm run production
+   ```
+4. Connect Host, Port = 8000 or not
+   (http://localhost:8000)
+   
+#### Using Flask
 
 1. Download packages by pip3
 
