@@ -1,4 +1,4 @@
-![QOJ](C:\Users\NB\Desktop\PJ_QOJ\QOJ.png)
+![QOJ LOGO](.\dist\static\images\info1.png)
 
 # Q O J
 
@@ -6,7 +6,7 @@
 
 ---
 
-![image-20200613160002027](C:\Users\NB\AppData\Roaming\Typora\typora-user-images\image-20200613160002027.png)
+![QOJ Overview](.\dist\static\images\info2.png)
 
 ---
 
