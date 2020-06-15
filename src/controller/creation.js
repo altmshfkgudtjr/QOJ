@@ -71,9 +71,10 @@ const ApiGetLecture = (lecture_id, callback)=> {
 }
 
 // 모든 사용자 조회 API
-const ApiGetAllManager = (callback)=> {
+const ApiGetAllManager = (lecture_id, callback)=> {
+	let sendData = {'class_id': lecture_id};
 	LoadingOn();
-	FETCH('/API/V1/auth/get_all_user', 'GET', null, (data)=> {
+	FETCH('/API/V1/auth/get_all_user', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (typeof(callback) == 'function') {

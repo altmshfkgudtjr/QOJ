@@ -24,8 +24,8 @@ const ApiManagerClasses = (callback)=> {
 }
 
 // 분반 활성화/비활성화 API
-const ApiActivateClass = (class_id, activation)=> {
-	let sendData = {'pg_id': class_id, 'pg_activate': activation};
+const ApiActivateClass = (lecture_id, class_id, activation)=> {
+	let sendData = {'class_id': lecture_id, 'pg_id': class_id, 'pg_activate': activation};
 	LoadingOn();
 	FETCH('/API/V1/problem_manage/change_activate', 'POST', sendData, (data)=> {
 		LoadingOff();
@@ -46,10 +46,10 @@ const ApiActivateClass = (class_id, activation)=> {
 }
 
 // 시험모드 활성화/비활성화 API
-const ApiActivateExam = (class_id, activation)=> {
-	let sendData = {'pg_id': class_id, 'pg_exam': activation};
+const ApiActivateExam = (lecture_id, class_id, activation)=> {
+	let sendData = {'class_id': lecture_id, 'pg_id': class_id, 'pg_exam': activation};
 	LoadingOn();
-	FETCH('API/V1/problem_manage/change_exam', 'POST', sendData, (data)=> {
+	FETCH('/API/V1/problem_manage/change_exam', 'POST', sendData, (data)=> {
 		LoadingOff();
 		if (data.API_STATUS == 'success') {
 			if (activation == true) {
@@ -90,8 +90,9 @@ const ApiInsertClass = (lecture_id, title, callback)=> {
 }
 
 // 문제집 수정 업데이트 API
-const ApiUpdateClass = (class_id, title, start_time, end_time, callback)=> {
+const ApiUpdateClass = (lecture_id, class_id, title, start_time, end_time, callback)=> {
 	let sendData = {
+		'class_id': lecture_id,
 		'pg_id': class_id,
 		'pg_title': title,
 		'pg_exam_start': start_time,
@@ -117,8 +118,8 @@ const ApiUpdateClass = (class_id, title, start_time, end_time, callback)=> {
 }
 
 // 문제집 삭제 API
-const ApiDeleteClass = (class_id, callback)=> {
-	let sendData = {'pg_id': class_id};
+const ApiDeleteClass = (lecture_id, class_id, callback)=> {
+	let sendData = {'class_id': lecture_id, 'pg_id': class_id};
 	LoadingOn();
 	FETCH('/API/V1/problem_manage/delete_problem_group', 'POST', sendData, (data)=> {
 		LoadingOff();
@@ -161,8 +162,8 @@ const ApiViewProblem = (class_id, problem_id, callback)=> {
 }
 
 // 문제 생성 API
-const ApiInsertProblem = (class_id, title, post, query, callback)=> {
-	let sendData = {'pg_id': class_id, 'p_title': title, 'p_content': post, 'p_answer': query};
+const ApiInsertProblem = (lecture_id, class_id, title, post, query, callback)=> {
+	let sendData = {'class_id': lecture_id, 'pg_id': class_id, 'p_title': title, 'p_content': post, 'p_answer': query};
 	LoadingOn();
 	FETCH('/API/V1/problem_manage/create_problem', 'POST', sendData, (data)=> {
 		LoadingOff();
@@ -183,8 +184,8 @@ const ApiInsertProblem = (class_id, title, post, query, callback)=> {
 }
 
 // 문제 수정 API
-const ApiModifyProblem = (problem_id, title, post, query, callback)=> {
-	let sendData = {'p_id': problem_id, 'p_title': title, 'p_content': post, 'p_answer': query};
+const ApiModifyProblem = (lecture_id, problem_id, title, post, query, callback)=> {
+	let sendData = {'class_id': lecture_id, 'p_id': problem_id, 'p_title': title, 'p_content': post, 'p_answer': query};
 	LoadingOn();
 	FETCH('/API/V1/problem_manage/update_problem', 'POST', sendData, (data)=> {
 		LoadingOff();
@@ -205,8 +206,8 @@ const ApiModifyProblem = (problem_id, title, post, query, callback)=> {
 }
 
 // 문제 삭제 API
-const ApiDeleteProblem = (problem_id, callback)=> {
-	let sendData = {'p_id': problem_id};
+const ApiDeleteProblem = (lecture_id, problem_id, callback)=> {
+	let sendData = {'class_id': lecture_id, 'p_id': problem_id};
 	LoadingOn();
 	FETCH('/API/V1/problem_manage/delete_problem', 'POST', sendData, (data)=> {
 		LoadingOff();

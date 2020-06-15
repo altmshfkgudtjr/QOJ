@@ -31,7 +31,14 @@ const SearchUser = ()=> {
 
 // 모든 사용자 조회
 const InserAllUser = ()=> {
-	ApiGetAllManager((data)=> {
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	ApiGetAllManager(lecture_id, (data)=> {
 		let target = document.querySelector('#user_cont');
 		target.innerHTML = ``
 		for (let user of data) {

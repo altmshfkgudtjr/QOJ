@@ -280,7 +280,14 @@ const ActivateClass = (class_id)=> {
 	let activate = document.querySelector("#class_activate").checked;
 	if (activate == true) activate = 1;
 	else activate = 0;
-	ApiActivateClass(class_id, activate);
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	ApiActivateClass(lecture_id, class_id, activate);
 }
 
 // 시험모드 활성화/비활성화
@@ -288,7 +295,14 @@ const ActivateExam = (class_id)=> {
 	let activate = document.querySelector("#exam_activate").checked;
 	if (activate == true) activate = 1;
 	else activate = 0;
-	ApiActivateExam(class_id, activate);
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	ApiActivateExam(lecture_id, class_id, activate);
 }
 
 // sql 파일 업로드

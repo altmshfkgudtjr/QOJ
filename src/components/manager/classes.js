@@ -12,37 +12,12 @@ const AddClassOne = ()=> {
 		</div>
 		<div id="class_submit_btn" class="class_modify_btn noselect pointer wow animated fadeInRight">Create&nbsp; <i class="fas fa-arrow-right"></i></div>
 	`;
-	/*
-		<div class="content_container_time_cont noselect">
-			<div>
-				Start Time(Option) : <input class="content_container_time_input" id="time_start_date" type="date"><input class="content_container_time_input" id="time_start_time" type="time">
-			</div>
-			<div>
-				End Time(Option) : <input class="content_container_time_input" id="time_end_date" type="date"><input class="content_container_time_input" id="time_end_time" type="time">
-			</div>
-		</div>
-	*/
 
 	return view;
 }
 
 // 문제집 생성 이벤트
 const AddClassOneEvent = (lecture_id)=> {
-	// let now = new Date();
-	// let start_div_date = document.querySelector('#time_start_date');
-	// let end_div_date = document.querySelector('#time_end_date');
-	// let start_div_time = document.querySelector("#time_start_time");
-	// let end_div_time = document.querySelector("#time_end_time");
-	// Object.assign(start_div_date, {
-	// 	'min': new Date(now.setFullYear(now.getFullYear()-1)).toISOString().split('T')[0],
-	// 	'max': new Date(now.setFullYear(now.getFullYear()+2)).toISOString().split('T')[0]
-	// });
-	// // 마감시간 역주행을 방지한 이벤트 삽입
-	// start_div_date.addEventListener('change', LimitEndDate);
-	// end_div_date.addEventListener('change', LimitEndTime);
-	// start_div_time.addEventListener('change', LimitEndTime);
-	// end_div_time.addEventListener('change', LimitEndTime);
-
 	// 제출
 	document.querySelector("#class_submit_btn").addEventListener("click", ()=> {
 		AddClassOneSubmit(lecture_id);
@@ -64,21 +39,8 @@ const AddClassOneSubmit = (lecture_id)=> {
 		document.querySelector("#class_title_input").focus();
 		return;
 	}
-	// // 시간 설정 잘못했으면 return
-	// if (!LimitEndTime()) {
-	// 	return;
-	// }
-	// let start = null, end = null;
-	// let start_date = document.querySelector("#time_start_date").value;
-	// let end_date = document.querySelector("#time_end_date").value;
-	// let start_time = document.querySelector("#time_start_time").value;
-	// let end_time = document.querySelector("#time_end_time").value;
-	// if (start_date != '' && end_date != '' && start_time != '' && end_time != '') {
-	// 	start = start_date+' '+start_time+':00';
-	// 	end = end_date+' '+end_time+":00";
-	// }
 	ApiInsertClass(lecture_id, title, (data)=> {
-		router._goTo("/manager");
+		router._goTo(`/manager${location.href.split('/manager')[1]}`);
 		Snackbar("Class appended successful!");
 	});
 }
@@ -88,8 +50,15 @@ const DeleteClassOneEvent = (class_id)=> {
 	if (!confirm("Are you sure?")) {
 		return;
 	}
-	ApiDeleteClass(class_id, (data)=> {
-		router._goTo('/manager');
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	ApiDeleteClass(lecture_id, class_id, (data)=> {
+		router._goTo(`/manager${location.href.split('/manager')[1]}`);
 		Snackbar("Delete Successful!");
 	});
 }
@@ -228,6 +197,13 @@ const ModifyClassOneEvent = (class_id)=> {
 
 // 문제 수정 제출
 const ModifyClassOneSubmit = (class_id)=> {
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
 	if (document.querySelector("#class_title_input").value == "") {
 		Snackbar("Check the class name.");
 		document.querySelector("#class_title_input").focus();
@@ -243,7 +219,7 @@ const ModifyClassOneSubmit = (class_id)=> {
 	end_time = end_date+' '+end_time+':00';
 
 	// 업데이트 실행
-	ApiUpdateClass(class_id, title, start_time, end_time, (data)=> {
+	ApiUpdateClass(lecture_id, class_id, title, start_time, end_time, (data)=> {
 		router._goTo(`/manager${location.href.split('/manager')[1]}`);
 		Snackbar("Update successful!");
 	});

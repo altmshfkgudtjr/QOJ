@@ -105,7 +105,14 @@ const AddProblem = (class_id)=> {
 		document.querySelector("#shell").focus();
 		return;
 	}
-	ApiInsertProblem(class_id, title, post, query, (data)=> {
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	ApiInsertProblem(lecture_id, class_id, title, post, query, (data)=> {
 		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("Problem Created Successful!");
 	});
@@ -131,7 +138,14 @@ const ModifyProblem = (problem_id)=> {
 		document.querySelector("#shell").focus();
 		return;
 	}
-	ApiModifyProblem(problem_id, title, post, query, (data)=> {
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	ApiModifyProblem(lecture_id, problem_id, title, post, query, (data)=> {
 		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("Problem Modified Successful!");
 	});
@@ -142,7 +156,14 @@ const DeleteProblem = (problem_id)=> {
 	if (!confirm("Are you sure?")) {
 		return;
 	}
-	ApiDeleteProblem(problem_id, (data)=> {
+	let lecture_id = null;
+	if (location.href.indexOf("#cl?") == -1) {
+		router._goTo("/board");
+		return;
+	} else {
+		lecture_id = location.href.split("#cl?")[1].split("#")[0];
+	}
+	ApiDeleteProblem(lecture_id, problem_id, (data)=> {
 		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("Problem Deleted Successful!");
 	})
