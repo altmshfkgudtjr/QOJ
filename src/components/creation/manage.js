@@ -103,7 +103,6 @@ const CreateCreation = (lecture_id='')=> {
 	let main_manager = document.querySelector("#main_manager").value;
 	let sub_managers = [...document.querySelectorAll("#creation_sub .creation_lecture_name")].map(submanager => submanager.value);
 	sub_managers = sub_managers.filter(submanager => submanager.length > 0);
-	console.log(sub_managers);
 	if (title == '') {
 		Snackbar("Check the lecture name.");
 		document.querySelector("#lecture_name").focus();
