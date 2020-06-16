@@ -1,6 +1,7 @@
 import { router } from '../../router.js'
 import { Snackbar } from '../snackbar.js'
 import { Problem, ProblemEvent, ChangeCodeLine } from '../lecture/problem.js'
+import { RunQuery } from '../lecture/problem.js'
 import { ApiProblem, ApiRunProblem } from '../../controller/lecture.js'
 import { ApiInsertProblem, ApiModifyProblem, ApiDeleteProblem, ApiViewProblem } from '../../controller/manager.js'
 
@@ -167,49 +168,6 @@ const DeleteProblem = (problem_id)=> {
 		router._goTo(`/manager${location.href.split("/manager")[1]}`);
 		Snackbar("Problem Deleted Successful!");
 	})
-}
-
-// 쿼리문 실행
-const RunQuery = ()=> {
-	let lecture_id = null;
-	if (location.href.indexOf("#cl?") == -1) {
-		router._goTo("/board");
-		return;
-	} else {
-		lecture_id = location.href.split("#cl?")[1].split("#")[0];
-	}
-	// Enter -> 공백으로, 2칸 이상 공백 -> 한칸 공백으로
-	let query = document.querySelector("#shell").textContent.trim().replace(/\s{2,}/gi, ' ');
-	ApiRunProblem(query, lecture_id, (data)=> {
-		let target = document.querySelector("#shell_result");
-		if (typeof(data) == 'string') {
-			let result = data;
-			target.innerHTML = "";
-			target.textContent = result;
-		} else {
-			let table = document.createElement('table');
-			let post = `<thead><tr>`;
-			for (let info of Object.keys(data[0])) {
-				post += `<th>${info}</th>`;
-			}
-			post += `</tr></thead>`;
-
-			post += `<tbody>`;
-			for (let row of data) {
-				post += `<tr>`;
-				for (let info of Object.keys(data[0])) {
-					post += `<td>${row[info]}</td>`;
-				}
-				post += `</tr>`;
-			}
-			post += `</tbody>`
-
-			table.innerHTML = post;
-
-			target.textContent = "";
-			target.append(table);
-		}
-	});
 }
 
 // content box display 되돌리기

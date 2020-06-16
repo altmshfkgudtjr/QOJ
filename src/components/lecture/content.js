@@ -5,7 +5,7 @@ import { Snackbar } from '../snackbar.js'
 
 const Content = ()=> {
 	let view = `
-		<div id="problems_title" class="content_container_title noselect">&nbsp;</div>
+		<div id="problems_title" class="content_container_title noselect"><i class="fas fa-arrow-left"></i> Select Class</div>
 		<div class="content_container_time_cont noselect">
 			<div>
 				Start Time : <span id="class_start"></span>

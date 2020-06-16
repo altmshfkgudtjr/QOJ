@@ -77,6 +77,7 @@ const RunQuery = ()=> {
 	}
 	// Enter -> 공백으로, 2칸 이상 공백 -> 한칸 공백으로
 	let query = document.querySelector("#shell").innerText.trim().replace(/\n/gi, " ").replace(/\s{2,}/gi, ' ');
+	console.log(query);
 	ApiRunProblem(query, lecture_id, (data)=> {
 		let target = document.querySelector("#shell_result");
 		if (typeof(data) == 'string') {
