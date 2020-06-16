@@ -7,7 +7,6 @@ const UserCont = ()=> {
 	<input id="creation_input_user" class="creation_input_user" spellcheck="false" placeholder="Input User ID/Student ID">
 	<div id="user_cont" class="creation_user_cont"></div>
 	`;
-
 	return view;
 }
 
@@ -33,8 +32,6 @@ const SearchUser = ()=> {
 const InserAllUser = ()=> {
 	let lecture_id = null;
 	if (location.href.indexOf("#cl?") == -1) {
-		router._goTo("/board");
-		return;
 	} else {
 		lecture_id = location.href.split("#cl?")[1].split("#")[0];
 	}
