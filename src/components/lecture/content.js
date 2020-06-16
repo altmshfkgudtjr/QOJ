@@ -75,6 +75,8 @@ const ShowProblems = (class_id)=> {
 			let user_score = problem['up_state'], user_score_color = '';
 			if (user_score == null) {
 				user_score = 0;
+			} else if (user_score == 0) {
+				user_score = 0;
 			} else {
 				user_score = 100;
 				user_score_color = 'content_container_class_score_correct';
