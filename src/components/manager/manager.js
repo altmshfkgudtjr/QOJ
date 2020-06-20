@@ -118,14 +118,24 @@ const ManageClass = (class_id)=> {
 			if (data['pg_exam_start'] != "Mon, 01 Jan 1990 00:00:00 GMT") {
 				start = new Date(data['pg_exam_start']);
 				start = new Date(start.setHours(start.getHours() - 9));
-				start = start.getFullYear()+'-'+(start.getMonth()*1+1)+'-'+start.getDate()+" "+start.getHours()+":"+start.getMinutes()+":"+start.getSeconds();
+				start = start.getFullYear()+'-'
+					+((start.getMonth()*1+1)<10?"0"+(start.getMonth()*1+1):(start.getMonth()*1+1))+'-'
+					+(start.getDate()<10?"0"+start.getDate():start.getDate())+" "
+					+((start.getHours())<10?"0"+(start.getHours()):(start.getHours()))+":"
+					+((start.getMinutes())<10?"0"+(start.getMinutes()):(start.getMinutes()))+":"
+					+((start.getSeconds())<10?"0"+(start.getSeconds()):(start.getSeconds()));
 			} else {
 				start = "Infinite";
 			}
 			if (data['pg_exam_end'] != "Wed, 01 Jan 3000 00:00:00 GMT") {
 				end = new Date(data['pg_exam_end']);
 				end = new Date(end.setHours(end.getHours() - 9));
-				end = end.getFullYear()+'-'+(end.getMonth()*1+1)+'-'+end.getDate()+" "+end.getHours()+":"+end.getMinutes()+":"+end.getSeconds();
+				end = end.getFullYear()+'-'
+					+((end.getMonth()*1+1)<10?"0"+(end.getMonth()*1+1):(end.getMonth()*1+1))+'-'
+					+(end.getDate()<10?"0"+end.getDate():end.getDate())+" "
+					+((end.getHours())<10?"0"+(end.getHours()):(end.getHours()))+":"
+					+((end.getMinutes())<10?"0"+(end.getMinutes()):(end.getMinutes()))+":"
+					+((end.getSeconds())<10?"0"+(end.getSeconds()):(end.getSeconds()));
 			} else {
 				end = "Infinite";
 			}

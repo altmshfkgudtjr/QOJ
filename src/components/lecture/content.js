@@ -30,14 +30,26 @@ const ContentEvent = (class_id)=> {
 		let date = null;
 		if (data['pg_exam_start'] != "Mon, 01 Jan 1990 00:00:00 GMT") {
 			date = new Date(data['pg_exam_start']);
-			date = date.getFullYear()+'-'+(date.getMonth()*1+1)+'-'+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+			date = new Date(date.setHours(date.getHours() - 9));
+			date = date.getFullYear()+'-'
+					+((date.getMonth()*1+1)<10?"0"+(date.getMonth()*1+1):(date.getMonth()*1+1))+'-'
+					+(date.getDate()<10?"0"+date.getDate():date.getDate())+" "
+					+((date.getHours())<10?"0"+(date.getHours()):(date.getHours()))+":"
+					+((date.getMinutes())<10?"0"+(date.getMinutes()):(date.getMinutes()))+":"
+					+((date.getSeconds())<10?"0"+(date.getSeconds()):(date.getSeconds()));
 		} else {
 			date = "Infinite";
 		}
 		document.querySelector("#class_start").textContent = date;
 		if (data['pg_exam_end'] != "Wed, 01 Jan 3000 00:00:00 GMT") {
 			date = new Date(data['pg_exam_end']);
-			date = date.getFullYear()+'-'+(date.getMonth()*1+1)+'-'+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds();
+			date = new Date(date.setHours(date.getHours() - 9));
+			date = date.getFullYear()+'-'
+					+((date.getMonth()*1+1)<10?"0"+(date.getMonth()*1+1):(date.getMonth()*1+1))+'-'
+					+(date.getDate()<10?"0"+date.getDate():date.getDate())+" "
+					+((date.getHours())<10?"0"+(date.getHours()):(date.getHours()))+":"
+					+((date.getMinutes())<10?"0"+(date.getMinutes()):(date.getMinutes()))+":"
+					+((date.getSeconds())<10?"0"+(date.getSeconds()):(date.getSeconds()));
 		} else {
 			date = "Infinite";
 		}
